@@ -1,0 +1,48 @@
+*{
+	margin: 0px;
+	padding: 0px;
+}
+body{
+	background-color:#DCDCDC;
+}
+#logo{
+	display: block;
+	background: url('../images/BanditLogo.png') no-repeat;
+	top:3%;
+	width:140px; 
+	height:115px;
+	position:absolute;
+	z-index:10000000000000000000000000000000;
+}
+#menu{
+		background-color: #191970;
+		width: 250px;
+		
+}
+a{
+	color: white;
+
+}
+a:hover{
+	color: #FF8C00;	
+	text-decoration: none;
+
+}
+span{
+	color: #FF8C00;
+	margin-right: 10%;
+}
+ul{
+	
+}
+li{
+	padding: 10%;
+	list-style-type: none;
+}
+li:hover{
+	background-color: #708090;
+}
+.line{
+	  border-bottom: 1px solid white;
+	  padding-bottom: 20%;
+}

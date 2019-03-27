@@ -5,19 +5,60 @@
 body{
 	background-color:#DCDCDC;
 }
+main{
+	display: block;
+	float: right;
+	width: 82%; 
+	padding: 1.3%;
+}
+.clear{
+	clear: both;
+}
+.search-box{
+	background-color:white;
+	border-radius: 40px;
+	width:400px;
+	margin-left:1.5%;
+	margin-bottom: 2%;
+}
+input{
+	border:none;
+	border-radius: 40px;
+	width:340px;
+	height:20px;
+	padding: 5%;
+
+}
+.mainContainer{
+	width: 73%;
+}
+.Top{
+	background:white;
+	width:97%;
+	height: 170px;
+	margin:1.5%;
+}
+.mainDiv{
+	background-color:white;
+	width: 22%;
+	height: 170px;
+	display: block;
+	float:left;
+	margin: 1.5%;
+}
 #logo{
 	display: block;
 	background: url('../images/BanditLogo.png') no-repeat;
 	top:3%;
-	width:140px; 
-	height:115px;
+	width:100px; 
+	height:100%;
 	position:absolute;
 	z-index:10000000000000000000000000000000;
 }
 #menu{
 		background-color: #191970;
-		width: 250px;
-		
+		width: 18%;
+		float: left;
 }
 a{
 	color: white;

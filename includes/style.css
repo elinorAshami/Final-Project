@@ -9,8 +9,9 @@ body{
 	background-color:#DCDCDC;
 	height:100%;
 }
-.wrapper{
-	height:100%;
+#wrapper{
+	height: 100%;
+	overflow:hidden:
 }
 main{
 	display: block;
@@ -67,13 +68,15 @@ article{
 	text-align: center;
 	padding:4%;
 }
-div>article:first-child{
+div>article{
 	margin-bottom:3%;
 }
 section{
 	background-color:#796EAF;
 	height:50px;	
 	margin: 3.5%;
+	text-align:left;
+	vertical-align: middle;
 }
 #logo{
 	display: block;
@@ -89,7 +92,6 @@ section{
 		width: 18%;
 		float: left;
 		height:100%;
-		overflow:hidden
 }
 a{
 	color: white;

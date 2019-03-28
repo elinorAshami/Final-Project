@@ -49,6 +49,8 @@ input{
 	width:97%;
 	height: 200px;
 	margin:1.8%;
+	vertical-align: middle;
+	text-align:left;
 }
 .mainDiv{
 	background-color:white;
@@ -92,6 +94,8 @@ section{
 		width: 18%;
 		float: left;
 		height:100%;
+		position:absolute;
+		bottom: 0;
 }
 a{
 	color: white;

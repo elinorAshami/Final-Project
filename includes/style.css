@@ -62,7 +62,7 @@ input{
 }
 .topRight{
 	width: 25%;
-	float:right;
+	float:right;	
 }
 article{
 	background-color:#191970;
@@ -79,6 +79,8 @@ section{
 	margin: 3.5%;
 	text-align:left;
 	vertical-align: middle;
+	line-height:300%;
+	padding-left:3%;
 }
 #logo{
 	display: block;
@@ -94,8 +96,9 @@ section{
 		width: 18%;
 		float: left;
 		height:100%;
-		position:absolute;
+		position:fixed;
 		bottom: 0;
+		
 }
 a{
 	color: white;

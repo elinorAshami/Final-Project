@@ -50,7 +50,8 @@ input{
 	height: 200px;
 	margin:1.8%;
 	vertical-align: middle;
-	text-align:left;
+	text-align:right;
+	line-height:180px;
 }
 .mainDiv{
 	background-color:white;
@@ -64,16 +65,16 @@ input{
 	width: 25%;
 	float:right;	
 }
-article{
+.topRight div{
 	background-color:#191970;
 	color: white;
 	text-align: center;
 	padding:4%;
 }
-div>article{
+.topRight>div:first-child{
 	margin-bottom:3%;
 }
-section{
+.topRight nav{
 	background-color:#796EAF;
 	height:50px;	
 	margin: 3.5%;
@@ -81,6 +82,17 @@ section{
 	vertical-align: middle;
 	line-height:300%;
 	padding-left:3%;
+}
+.topRight img{
+	background-color:white;
+	height:50px;
+	width:50px;
+	border:2px white solid;
+	margin-left:2%;
+}
+p{
+	margin-right:4%;
+	float:right;
 }
 #logo{
 	display: block;

@@ -121,7 +121,7 @@ a:hover{
     text-decoration: none;
 
 }
-span{
+#wrapper span{
     color: #FF8C00;
     margin-right: 10%;
 }
@@ -137,27 +137,54 @@ li:hover{
       padding-bottom: 20%;
 }
 .topBand{
-    background: white;
     width: 800px;
-    height: 300px;
+    height: 600px;
     margin: 5%;
+}
+.topBand section h3{
+    font-weight: bold;
+    margin-top: 0px;
+    margin-left: 5%;
 }
 .topBand img{
     width: 400px; 
     height:300px;
 }
 .topBand section{
-    background-color: white;
     display: inline;
     float: right;
     width: 400px;
     height: 300px;
 }
-.topBand h2{
-    margin: 2%;
-   
+.topBand nav h3{
+    margin: 5%;
+    font-weight: bold;
 }
-p{
+.topBand p{
     direction: ltr;
-    text-align: left;
+    float: left;
+    margin-left: 5%;
+    margin-top:10%; 
+    display: inline;
+}
+.topBand nav{
+    width: 400px; 
+    height:300px;
+    float: left;
+}
+.topBand span{
+    font-size: 12px;
+}
+.topBand nav img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    float: left;
+}
+.members nav{
+    width: 300px;
+    height: 75px;
+    padding: 5%;
+    vertical-align: middle;
+    line-height: 5px;
 }

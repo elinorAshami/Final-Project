@@ -89,6 +89,8 @@ input{
     width:50px;
     border:2px white solid;
     margin-left:2%;
+    border: 2px solid #796EAF;
+
 }
 p{
     margin-right:4%;
@@ -146,18 +148,25 @@ li:hover{
     margin-top: 0px;
     margin-left: 5%;
 }
+.topBand span{
+    font-size: 12px;
+    vertical-align: top;
+    padding: 1%;
+}
 .topBand img{
     width: 400px; 
     height:300px;
+    margin-bottom: 5%;
+
 }
 .topBand section{
     display: inline;
     float: right;
     width: 400px;
     height: 300px;
+    margin-bottom: 5%;
 }
 .topBand nav h3{
-    margin: 5%;
     font-weight: bold;
 }
 .topBand p{
@@ -172,10 +181,8 @@ li:hover{
     height:300px;
     float: left;
 }
-.topBand span{
-    font-size: 12px;
-}
-.topBand nav img{
+
+.members img{
     width: 50px;
     height: 50px;
     border-radius: 50px;
@@ -183,8 +190,24 @@ li:hover{
 }
 .members nav{
     width: 300px;
-    height: 75px;
-    padding: 5%;
+    height: 50px;
+    margin-bottom: 3%;
     vertical-align: middle;
-    line-height: 5px;
+    line-height: 1px;
+}
+.songs nav{
+    width: 300px;
+    height: 50px;
+    margin-bottom: 3%;
+    background: #796EAF;
+    vertical-align: middle;
+    line-height: 1px;
+}
+.songs img{
+    background-color:white;
+    height:50px;
+    width:50px;
+    border:2px white solid;
+    float: left;
+    border: 2px solid #796EAF;
 }

@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css?family=Orbitron');
+
+body {
+  background: #242829;
+}
+
+.header {
+    text-align:center;
+}
+
+.controlButton {
+    font-size: 20px !important;
+    min-width: inherit !important;
+    padding: 10px 12px !important;
+    border-radius: 0px !important;
+    border-right: 1px solid #e0f9ff30 !important;
+    height: 50px;
+    background: linear-gradient(#3b3a3e,#1d1f25,#242529) !important;
+    font-family:Orbitron;
+    text-transform: inherit !important;
+    color: #95adca !important;
+}
+
+.controls, .timeline {
+    display: inline-block;
+    margin: 5px;
+    border: solid 2px #1e1d22 !important;
+}
+
+.timeline .controlButton {
+    border-right: 0px !important;
+
+}
+#root {
+    flex-grow: 1;
+}

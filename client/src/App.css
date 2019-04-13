@@ -2,6 +2,7 @@
 
 body {
   background: #242829;
+    color: #95adca;
 }
 
 .header {
@@ -21,15 +22,60 @@ body {
     color: #95adca !important;
 }
 
-.controls, .timeline {
+.controls {
     display: inline-block;
     margin: 5px;
     border: solid 2px #1e1d22 !important;
 }
 
-.timeline .controlButton {
-    border-right: 0px !important;
+.channels {
+    width:25%;
+    display:inline-block;
+    margin:0;
+}
 
+.timeline {
+    width:80%;
+    display: inline-block;
+    margin:0;
+}
+
+.channel {
+    border: 1px solid #95adca;
+    padding:5px;
+}
+
+.channel-icon {
+    border-radius:10px;
+    font-size:30px;
+    text-align:center;
+    width:15%;
+    margin:0 5% 0 0;
+    background: #95adca;
+    display: inline-block;
+}
+
+.channel-icon img {
+    width:100%;
+}
+
+.channel-details {
+    width:75%;
+    margin:0;
+    display: inline-block;
+}
+
+.channel-details p {
+    margin: 0;
+}
+
+.channel-button {
+    background: #95adc9 !important;
+}
+
+.volume-slider {
+    display: inline-block;
+    width:40% !important;
 }
 #root {
     flex-grow: 1;

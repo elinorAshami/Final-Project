@@ -29,34 +29,42 @@ body {
 }
 
 .channels {
+    margin-top: 30px;
     width:25%;
-    display:inline-block;
-    margin:0;
+    float:left;
 }
 
-.timeline {
-    width:80%;
-    display: inline-block;
+.timeline-container {
+    width:75%;
+    float:left;
     margin:0;
 }
 
 .channel {
-    border: 1px solid #95adca;
-    padding:5px;
+    overflow: auto;
+    overflow-x: hidden;
+    border-bottom: 1px solid #4242422e;
+    padding: 5px;
 }
 
 .channel-icon {
-    border-radius:10px;
-    font-size:30px;
-    text-align:center;
-    width:15%;
-    margin:0 5% 0 0;
+    border-radius: 10px;
+    font-size: 30px;
+    text-align: center;
+    width: 20%;
+    margin: 0 5% 0 0;
     background: #95adca;
-    display: inline-block;
+    float: left;
 }
 
-.channel-icon img {
-    width:100%;
+.channel img {
+    border-radius: 10px;
+    font-size: 30px;
+    text-align: center;
+    width: 20%;
+    margin: 0 5% 0 0;
+    background: #95adca;
+    float: left;
 }
 
 .channel-details {
@@ -66,16 +74,44 @@ body {
 }
 
 .channel-details p {
-    margin: 0;
+    margin: 10px 0 12px 0;
 }
 
 .channel-button {
     background: #95adc9 !important;
+    min-width: inherit !important;
+    font-size: 12px !important;
+    margin-right: 10px !important;
 }
 
 .volume-slider {
     display: inline-block;
-    width:40% !important;
+    width: 55% !important;
+    margin-right: 20px;
+    top: -6px;
+}
+
+.volume-track {
+    height:7px !important;
+}
+
+.channel-details svg {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+
+.timebar {
+    background: rgba(106, 113, 122, 0.45);
+    height: 30px;
+}
+
+
+.timebar-channel {
+    height: 80px;
+    width: 100%;
+    background: #101213;
+    border-bottom: 1px solid #43494e82;
 }
 #root {
     flex-grow: 1;

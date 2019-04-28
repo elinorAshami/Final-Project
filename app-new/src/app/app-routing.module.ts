@@ -3,11 +3,23 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IndexComponent } from "./index/index.component";
 import { BandComponent } from "./band/band.component";
+import { StudioComponent } from './studio/studio.component';
+import { FavorietsComponent } from './favoriets/favoriets.component';
+import { BoardComponent } from './board/board.component';
+import { NewBandComponent } from './new-band/new-band.component';
+import { InviteFriendComponent } from './invite-friend/invite-friend.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   { path: '' , redirectTo: '/index' , pathMatch:'full'},
   { path: 'index' , component: IndexComponent },
   { path: 'band' , component: BandComponent },
+  { path: 'studio' , component: StudioComponent},
+  { path: 'favoriets' , component: FavorietsComponent},
+  { path: 'board' , component: BoardComponent},
+  { path: 'new-band' , component: NewBandComponent},
+  { path: 'invite-friend' , component: InviteFriendComponent},
+  { path: 'profile' , component: ProfileComponent}
 ];
 
 @NgModule({

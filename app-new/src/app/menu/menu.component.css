@@ -30,10 +30,16 @@ a:hover{
   color: #FF8C00;
   text-decoration: none;
 }
+a.active{
+  color:#FF8C00;
+}
 li{
   padding: 10%;
   list-style-type: none;
   padding-left: 30px;
+}
+li.active{
+  background-color: #708090;
 }
 li:hover{
   background-color: #708090;
@@ -42,3 +48,4 @@ li:hover{
   border-bottom: 1px solid white;
   padding-bottom: 20%;
 }
+

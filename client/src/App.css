@@ -34,10 +34,16 @@ body {
     float:left;
 }
 
+.timeline {
+    width: 3000px;
+}
+
 .timeline-container {
     width:75%;
     float:left;
     margin:0;
+    position: relative;
+    overflow:auto;
 }
 
 .channel {
@@ -106,13 +112,27 @@ body {
     height: 30px;
 }
 
-
+.audioSnippet {
+    display: inline-block;
+    background: #95adca29;
+    border-radius: 5px;
+}
 .timebar-channel {
+    position: relative;
     height: 80px;
     width: 100%;
     background: #101213;
     border-bottom: 1px solid #43494e82;
 }
+
+.playLine {
+    width: 1px;
+    height: 100%;
+    z-index: 1;
+    background: #ffffff63;
+    position: absolute;
+}
+
 #root {
     flex-grow: 1;
 }

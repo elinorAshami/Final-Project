@@ -1,5 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+// @ts-ignore
+import { HttpModule } from '@angular/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,6 +14,8 @@ import { NewBandComponent } from './new-band/new-band.component';
 import { ProfileComponent } from './profile/profile.component';
 import { InviteFriendComponent } from './invite-friend/invite-friend.component';
 import { BoardComponent } from './board/board.component';
+import { BandsService} from "./bands.service";
+
 
 @NgModule({
   declarations: [
@@ -24,11 +28,13 @@ import { BoardComponent } from './board/board.component';
     NewBandComponent,
     ProfileComponent,
     InviteFriendComponent,
-    BoardComponent
+    BoardComponent,
+    BandsService
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpModule
   ],
   providers: [],
   bootstrap: [AppComponent]

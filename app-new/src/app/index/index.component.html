@@ -30,10 +30,10 @@
           <p>SONG NAME</p>
         </nav>
       </div>
-      <div><span class="glyphicon glyphicon-signal"></span>TOP 5 BANDS
+      <div *ngFor= "let band of bands "> TOP 5 BANDS
         <nav>1
           <img src="../assets/BanditLogo.png">
-          <p>BAND NAME</p>
+          <p> {{{bands.bandname}} </p>
         </nav>
         <nav>2
           <img src="../assets/BanditLogo.png">
@@ -49,7 +49,7 @@
         </nav>
         <nav>5
           <img src="../assets/BanditLogo.png">
-          <p>BAND NAME</p>
+          <p>BAND NAMEeeee</p>
         </nav>
       </div>
     </div>

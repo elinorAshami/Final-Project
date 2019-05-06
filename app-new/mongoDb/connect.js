@@ -28,18 +28,18 @@ let response = {
 
 //Get data
 router.get('/index' , (req , res) => {
-    connection((db) =>{
-      db.collection('BANDS')
-        .find()
-        .toArray()
-        .then((index)=>
-          response.data = index;
-          res.json(response);
-        })
-        .catch((err) => {
-          sendError(err,res);
-        });
+  connection((db) =>{
+    db.collection('BANDS')
+      .find()
+      .toArray()
+      .then((index)=>
+        response.data = index;
+    res.json(response);
+  })
+    .catch((err) => {
+      sendError(err,res);
     });
+});
 });
 
 module.exports =  router;

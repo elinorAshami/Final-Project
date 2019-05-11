@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-// @ts-ignore
-import { HttpModule } from '@angular/http';
+import {HttpClientModule} from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,7 +13,6 @@ import { NewBandComponent } from './new-band/new-band.component';
 import { ProfileComponent } from './profile/profile.component';
 import { InviteFriendComponent } from './invite-friend/invite-friend.component';
 import { BoardComponent } from './board/board.component';
-import { BandsService} from "./bands.service";
 import {FormsModule} from "@angular/forms";
 
 
@@ -35,10 +33,10 @@ import {FormsModule} from "@angular/forms";
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule
   ],
-  providers: [BandsService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

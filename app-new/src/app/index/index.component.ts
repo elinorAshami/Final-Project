@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { BandsService} from "../bands.service";
-import { Bands } from  '../Bands';
+// import { BandsService} from "../bands.service";
+// import { Bands } from  '../Bands';
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
@@ -10,15 +10,15 @@ import {ActivatedRoute} from "@angular/router";
 })
 
 export class IndexComponent implements OnInit {
-    bands : Bands[] =[];
+    // bands : Bands[] =[];
 
 
-  constructor(private bandService: BandsService) {
-    this.bandService.getBands()
-      .subscribe(bands => {
-        this.bands = bands;
-        console.log(this.bands);
-      })
+  constructor() {
+    // this.bandService.getBands()
+    //   .subscribe(bands => {
+    //     this.bands = bands;
+    //     console.log(this.bands);
+    //   })
   }
   ngOnInit() {
   }

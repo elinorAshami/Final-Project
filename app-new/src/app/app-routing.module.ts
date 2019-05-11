@@ -11,9 +11,8 @@ import { InviteFriendComponent } from './invite-friend/invite-friend.component';
 import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
-  { path: '' , redirectTo: '/index' , pathMatch:'full'},
-  { path: 'index' , component: IndexComponent },
-  { path: 'band' , component: BandComponent },
+  { path: '' , component: IndexComponent },
+  { path: 'band/:id' , component: BandComponent },
   { path: 'studio' , component: StudioComponent},
   { path: 'favoriets' , component: FavorietsComponent},
   { path: 'board' , component: BoardComponent},

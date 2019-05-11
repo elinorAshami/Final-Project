@@ -2,16 +2,22 @@ import React, { Component } from 'react';
 import '../App.css';
 import Button from '@material-ui/core/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlay,faStop,faStepBackward,faStepForward,faMicrophone,faMusic,faVolumeMute, faHeadphones,faPause } from '@fortawesome/free-solid-svg-icons'
+import { faPlay,faStop,faStepBackward,faStepForward,faMicrophone,faMusic,faVolumeMute, faHeadphones,faPause,faPlus,faWindowClose,faSave } from '@fortawesome/free-solid-svg-icons'
 import Slider from '@material-ui/lab/Slider';
 import BufferLoader from '../scripts/BufferLoader'
 import Draggable from 'react-draggable';
 import DATA from '../exampleData.js';
 import Waveform from 'waveform-react';
+import {InstrumentImgs} from '../assets/instrumentsImgs';
+import EditableLabel from 'react-inline-editing';
+import axios from 'axios';
 
 class Studio extends Component {
     constructor(props){
         super(props);
+        const that = this;
+        let urlparams = (new URL(document.location)).searchParams;
+        let id = urlparams.get("id");
         this.state = {
             volume: 100,
             spacing: 8,
@@ -20,38 +26,45 @@ class Studio extends Component {
             playbackTime: 0,
             channelData: DATA,
             loading:true,
+            songId: id,
+            title: 'New Song',
+            bpm: 120
         };
-
-        const mappedArr = [];
-        DATA.forEach((channel)=>{
-            channel.audioClips.forEach((audioClip)=>{
-                mappedArr.push(audioClip.audioUrl);
-            })
-        });
-
-        window.AudioContext = window.AudioContext||window.webkitAudioContext;
-        const context = new AudioContext();
-        context.suspend();
-        this.state.context = context;
-        const bufferLoader = new BufferLoader(
-            context,
-            mappedArr,
-            finishedLoading
-        );
-        bufferLoader.load();
-        const that = this;
-
-        function finishedLoading(bufferList) {
-            let i = 0;
-            const data = that.state.channelData;
-            data.forEach((channel,chIndex)=>{
-                channel.audioClips.forEach((audioClip,acIndex)=>{
-                    data[chIndex].audioClips[acIndex].buffer = bufferList[i];
-                    i++;
+        axios.post('http://localhost:1234/studio/getDataForStudio',{id})
+            .then((res)=>{
+            res = res.data;
+            that.setState({channelData: res.channels, title: res.title, bpm: res.bpm});
+            console.log(this.state)
+            const mappedArr = [];
+            res.channels.forEach((channel)=>{
+                channel.audioFiles.forEach((audioClip)=>{
+                    mappedArr.push(audioClip.audioUrl);
                 })
             });
-            that.setState({context,loading:false,channelData:data});
-        }
+            window.AudioContext = window.AudioContext||window.webkitAudioContext;
+            const context = new AudioContext();
+            context.suspend();
+            this.state.context = context;
+            const bufferLoader = new BufferLoader(
+                context,
+                mappedArr,
+                finishedLoading
+            );
+            bufferLoader.load();
+
+            function finishedLoading(bufferList) {
+                let i = 0;
+                const data = that.state.channelData;
+                data.forEach((channel,chIndex)=>{
+                    channel.audioFiles.forEach((audioClip,acIndex)=>{
+                        data[chIndex].audioFiles[acIndex].buffer = bufferList[i];
+                        i++;
+                    })
+                });
+                that.setState({context,loading:false,channelData:data});
+            }
+        });
+
     }
 
     msToTime(s) {
@@ -80,12 +93,12 @@ class Studio extends Component {
         const channelData = this.state.channelData;
         this.state.context.resume();
         this.state.channelData.forEach((channel,ci)=>{
-            channel.audioClips.forEach((audio,ai) => {
+            channel.audioFiles.forEach((audio,ai) => {
                 let bufferSource = this.state.context.createBufferSource();
                 bufferSource.buffer = audio.buffer;
                 bufferSource.connect(this.state.context.destination);
                 bufferSource.start(this.state.context.currentTime + audio.location/this.state.spacing);
-                channelData[ci].audioClips[ai].bufferSource = bufferSource;
+                channelData[ci].audioFiles[ai].bufferSource = bufferSource;
             })
         });
         this.setState(state => {
@@ -108,22 +121,122 @@ class Studio extends Component {
     stopAll = () => {
         clearInterval(this.timer); // new
         this.state.channelData.forEach((channel)=>{
-            channel.audioClips.forEach((audio) => {
+            channel.audioFiles.forEach((audio) => {
                 audio.bufferSource.stop(this.state.context.currentTime);
             })
         });
         this.state.context.suspend();
         this.setState({runningTime: 0, status: false, suspended: true });
     };
-    getTime = () => {
-        return this.state.context.currentTime
-    };
 
     handleDrag = (e,data) => {
         const channelData = this.state.channelData;
         const loc = data.node.id.split('-');
-        channelData[loc[1]].audioClips[loc[2]].location = data.x;
+        channelData[loc[1]].audioFiles[loc[2]].location = data.x;
         this.setState(channelData);
+    };
+
+    addChannel = () => {
+        console.log("add channel")
+        let channelData = this.state.channelData;
+        channelData.push({
+            'instrument': 'audio',
+            'title': 'New Channel',
+            'effects': [],
+            'audioFiles': [],
+            'new': true
+        });
+        this.setState({channelData})
+    };
+
+    deleteAudio = (ci,ai) => {
+        let channelData = this.state.channelData;
+        if (channelData[ci].audioFiles[ai].bufferSource) {
+            channelData[ci].audioFiles[ai].bufferSource.disconnect();
+        }
+        channelData[ci].audioFiles.splice(ai,1);
+        this.setState({channelData});
+    };
+
+    onUpload = (e) => {
+        this.setState({loading:true});
+        const reader1 = new FileReader();
+        const ci = e.target.id.split('-')[2];
+        let channelData = this.state.channelData;
+        const that = this;
+        const file = e.target.files[0];
+        reader1.onload = function(ev) {
+            that.state.context.decodeAudioData(ev.target.result).then(function(buffer) {
+                // Initial FormData
+                const formData = new FormData();
+                formData.append("file", file);
+                // formData.append("tags", `codeinfuse, medium, gist`);
+                formData.append("upload_preset", "biwlw0dl"); // Replace the preset name with your own
+                formData.append("api_key", "228417225742266"); // Replace API key with your own Cloudinary key
+                formData.append("timestamp", (Date.now() / 1000) | 0);
+
+                // Make an AJAX upload request using Axios (replace Cloudinary URL below with your own)
+                axios.post("https://api.cloudinary.com/v1_1/voiera/video/upload", formData, {
+                    headers: { "X-Requested-With": "XMLHttpRequest" },
+                }).then(response => {
+                    const data = response.data;
+                    channelData[ci].audioFiles.push({
+                        location:0,
+                        audioUrl: data.secure_url,
+                        buffer : buffer,
+                    });
+                    that.setState({channelData,loading: false});
+                });
+            });
+        };
+        reader1.readAsArrayBuffer(file);
+
+    };
+
+    saveSong = () => {
+        axios.post('http://localhost:1234/studio/saveDataInStudio',{
+            channels: this.state.channelData,
+            songId: this.state.songId,
+            title: this.state.title,
+            bpm: this.state.bpm
+        })
+        // let files = [];
+        // this.state.channelData.forEach((channel)=>{
+        //     channel.audioFiles.forEach((audio) => {
+        //         if (audio.audioUrl === 'local') {
+        //             console.log(audio.file);
+        //             files.push(audio.file);
+        //         }
+        //     })
+        // });
+
+        // Push all the axios request promise into a single array
+        // const uploaders = files.map(file => {
+        //
+        // });
+
+        // Once all the files are uploaded
+        // axios.all(uploaders).then(() => {
+            //     // ... perform after upload is successful operation
+            //     var data = new FormData();
+            //     data.append('files', JSON.stringify(files));
+            //     data.append('channelData', this.state.channelData);
+            //     data.append('songId', this.state.songId);
+            //     data.append('title', this.state.title);
+            //     axios.post('http://localhost:1234/studio/saveDataInStudio',data,{
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data'
+            //         }
+            //     })
+            //         .then((res) => {
+            //
+            //         })
+            // });
+    };
+
+    editTitle = (data) => {
+        //TODO handle empty string
+        this.setState({title:data})
     };
 
     componentWillUnmount() {
@@ -132,7 +245,16 @@ class Studio extends Component {
     render() {
         return (
             <div>
+                {this.state.loading ? <div className="loading">Loading...</div> : ''}
                 <div className="header">
+                    <div className="songDetails">
+                        <EditableLabel text={this.state.title}
+                                       labelClassName='songTitle'
+                                       inputClassName='songTitle'
+                                       inputWidth='300px'
+                                       onFocusOut={this.editTitle.bind(this)}
+                        />
+                    </div>
                     <div className="controls">
                         <Button className={"controlButton"}>
                             <FontAwesomeIcon icon={faStepBackward}/>
@@ -153,13 +275,13 @@ class Studio extends Component {
                             <FontAwesomeIcon icon={faMicrophone}/>
                         </Button>
                         <Button className={"controlButton"}>
-                            {this.msToTime(this.getTime()*1000)}
+                            {this.msToTime(this.state.runningTime)}
                         </Button>
                         <Button className={"controlButton"}>
                             <FontAwesomeIcon icon={faMusic}/>
                         </Button>
                         <Button className={"controlButton"}>
-                            120 BPM
+                            {this.state.bpm} BPM
                         </Button>
                         <Button className={"controlButton"}>
                             Cmaj
@@ -167,14 +289,19 @@ class Studio extends Component {
                         <Button className={"controlButton"}>
                             4/4
                         </Button>
+                        <Button className={"controlButton"}>
+                            <FontAwesomeIcon icon={faSave} onClick={this.saveSong.bind(this)}/>
+                        </Button>
                     </div>
                 </div>
                     <div className="channels">
                         {this.state.channelData.map((channel,key) =>
-                            <div key={channel.id} className="channel">
-                                <img src="./images/guitar.png"/>
+                            <div key={channel._id} className="channel">
+                                <img src={InstrumentImgs[channel.instrument] || InstrumentImgs.audio}/>
                                 <div className="channel-details">
-                                    <p>{channel.title}</p>
+                                    <p>{channel.title}
+                                        <input className="fileUpload" type='file' id={'upload-ch-'+key} onChange={this.onUpload} />
+                                    </p>
                                     <FontAwesomeIcon icon={faVolumeMute}/>
                                     <FontAwesomeIcon icon={faHeadphones}/>
                                     <Slider classes={{root: "volume-slider",track: "volume-track"}}
@@ -185,15 +312,20 @@ class Studio extends Component {
                                 </div>
                             </div>
                         )}
+                        <div>
+                            <Button className={"controlButton"} onClick={this.addChannel.bind(this)}>
+                                <FontAwesomeIcon icon={faPlus}/>
+                            </Button>
+                        </div>
                     </div>
                     <div className="timeline-container">
                         <div className="playLine" style={{'left': (this.state.runningTime/1000) * (this.state.spacing)}}/>
                         <div className="timeline">
                             <div className="timebar"></div>
                             {this.state.channelData.map((channel,ci) =>
-                                <div key={channel.id} className="timebar-channel">
-                                    {channel.audioClips.map((audioclip,ai) =>
-                                        <Draggable key={audioclip.id} bounds="parent" axis="x" defaultPosition={{'x':audioclip.location,y:0}} onDrag={this.handleDrag}>
+                                <div key={channel._id} className="timebar-channel" id={"channel-"+ci}>
+                                    {channel.audioFiles.map((audioclip,ai) =>
+                                        <Draggable key={audioclip._id} bounds={"#channel-"+ci} axis="x" defaultPosition={{'x':audioclip.location,y:0}} onDrag={this.handleDrag}>
                                             <div id={'audio-'+ci+'-'+ai} className="audioSnippet">
                                                 <div className="title">
                                                 Audio File {audioclip.id} : {this.msToTime((audioclip.location / this.state.spacing) * 1000)}
@@ -211,6 +343,9 @@ class Studio extends Component {
                                                         pointWidth: 1
                                                     }}
                                                 />
+                                                <Button className="deleteAudio" onClick={this.deleteAudio.bind(this,ci,ai)}>
+                                                    <FontAwesomeIcon icon={faWindowClose}/>
+                                                </Button>
                                             </div>
                                         </Draggable>
                                     )}

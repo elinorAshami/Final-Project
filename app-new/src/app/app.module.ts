@@ -15,6 +15,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { InviteFriendComponent } from './invite-friend/invite-friend.component';
 import { BoardComponent } from './board/board.component';
 import { BandsService} from "./bands.service";
+import {FormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -29,14 +30,15 @@ import { BandsService} from "./bands.service";
     ProfileComponent,
     InviteFriendComponent,
     BoardComponent,
-    BandsService
+
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpModule
+    HttpModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [BandsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

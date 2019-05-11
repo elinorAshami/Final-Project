@@ -1,2 +1,22 @@
 <app-menu></app-menu>
-<h1>NEW BAND IN PROGRESS...</h1>
+<main>
+      <form (submit)="createBand($event)">
+          <label> Band name: </label> <input type="text" [(ngModel)]="bandName" name="bandName"><br>
+          <label> Janner: </label>
+            <select [(ngModel)]="janner" name="janner">
+              <option> Janner1 </option>
+              <option> Janner2 </option>
+              <option> Janner3 </option>
+              <option> Janner4 </option>
+            </select><br>
+          <label> Description: </label>
+          <textarea [(ngModel)]="description" name="description"></textarea><br>
+          <label> Add members: </label> <input type="text"><br>
+          <div class="custom-file mb-3">
+            <input type="file" class="custom-file-input">
+            <label for="file" class="custom-file-label"> Add band photo </label><br>
+            <input type="submit" value="Submit" class="btn btn-primary">
+          </div>
+      </form>
+</main>
+

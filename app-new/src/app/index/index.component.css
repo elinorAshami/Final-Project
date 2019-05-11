@@ -96,48 +96,4 @@ input{
   margin-right:4%;
   float:right;
 }
-#logo{
-  display: block;
-  background: url('../../assets/BanditLogo.png') no-repeat;
-  top:3%;
-  width:100px;
-  height:100%;
-  position:absolute;
-  z-index:10000000000000000000000000000000;
-}
-#menu{
-  background-color: #191970;
-  width: 18%;
-  float: left;
-  height:100%;
-  position:fixed;
-  bottom: 0;
-}
-a{
-  color: white;
-  text-decoration: none;
-}
-a:hover{
-  color: #FF8C00;
-  text-decoration: none;
 
-}
-#menu span{
-  color: #FF8C00;
-  margin-right: 10%;
-}
-.topRight span{
-  color: #FF8C00;
-  margin-right: 10%;
-}
-li{
-  padding: 10%;
-  list-style-type: none;
-}
-li:hover{
-  background-color: #708090;
-}
-.line{
-  border-bottom: 1px solid white;
-  padding-bottom: 20%;
-}

@@ -5,53 +5,39 @@
   <main>
     <div class="search-box">
       <input type="text" name="" placeholder="Searh Library">
-      <span class="glyphicon glyphicon-search"></span>
     </div>
     <div class="topRight">
-      <div><span class="glyphicon glyphicon-signal"></span>TOP 5 SONGS
-        <nav>1
-          <img src="../assets/BanditLogo.png">
-          <p>SONG NAME</p>
-        </nav>
-        <nav>2
-          <img src="../assets/BanditLogo.png">
-          <p>SONG NAME</p>
-        </nav>
-        <nav>3
-          <img src="../assets/BanditLogo.png">
-          <p>SONG NAME</p>
-        </nav>
-        <nav>4
-          <img src="../assets/BanditLogo.png">
-          <p>SONG NAME</p>
-        </nav>
-        <nav>5
-          <img src="../assets/BanditLogo.png">
-          <p>SONG NAME</p>
+
+      <div> TOP 5 SONGS
+        <nav *ngFor="let band of bands; let i=index">
+          <img src="#">
+          <p> {{band.songs[0].songname}} </p>
         </nav>
       </div>
-      <div *ngFor= "let band of bands "> TOP 5 BANDS
-        <nav>1
-          <img src="../assets/BanditLogo.png">
-          <p> {{{bands.bandname}} </p>
+
+      <div> TOP 5 BANDS
+        <nav>
+          <img src="#">
+          <p> {{bands[0].bandname}} </p>
         </nav>
-        <nav>2
-          <img src="../assets/BanditLogo.png">
-          <p>BAND NAME</p>
+        <nav>
+          <img src="#">
+          <p> {{bands[1].bandname}} </p>
         </nav>
-        <nav>3
-          <img src="../assets/BanditLogo.png">
-          <p>BAND NAME</p>
+        <nav>
+          <img src="#">
+          <p> {{bands[2].bandname}} </p>
         </nav>
-        <nav>4
-          <img src="../assets/BanditLogo.png">
-          <p>BAND NAME</p>
+        <nav>
+          <img src="#">
+          <p> {{bands[3].bandname}} </p>
         </nav>
-        <nav>5
-          <img src="../assets/BanditLogo.png">
-          <p>BAND NAMEeeee</p>
+        <nav>
+          <img src="#">
+          <p> {{bands[4].bandname}} </p>
         </nav>
       </div>
+
     </div>
     <div class="mainContainer">
       <div class="Top"> <p>TOP ARTIST THIS WEEK</p> </div>

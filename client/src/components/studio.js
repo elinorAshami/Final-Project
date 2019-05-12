@@ -30,7 +30,7 @@ class Studio extends Component {
             title: 'New Song',
             bpm: 120
         };
-        axios.post('http://localhost:3000/studio/getDataForStudio',{id})
+        axios.post('https://shenkar-band-it.herokuapp.com/studio/getDataForStudio',{id})
             .then((res)=>{
             res = res.data;
             that.setState({channelData: res.channels, title: res.title, bpm: res.bpm});
@@ -194,7 +194,7 @@ class Studio extends Component {
     };
 
     saveSong = () => {
-        axios.post('http://localhost:3000/studio/saveDataInStudio',{
+        axios.post('https://shenkar-band-it.herokuapp.com/studio/saveDataInStudio',{
             channels: this.state.channelData,
             songId: this.state.songId,
             title: this.state.title,

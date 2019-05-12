@@ -16,7 +16,7 @@ export class BandComponent implements OnInit {
     this.route.params.subscribe(params => {
       id = params['id'];
     });
-    const req = this.http.post<any>("http://localhost:3000/bands/getBandData",{id});
+    const req = this.http.post<any>("https://shenkar-band-it.herokuapp.com/bands/getBandData",{id});
     req.subscribe((data)=>{
       this.bandData = data;
     });

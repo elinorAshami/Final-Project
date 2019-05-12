@@ -262,7 +262,7 @@ var BandComponent = /** @class */ (function () {
         this.route.params.subscribe(function (params) {
             id = params['id'];
         });
-        var req = this.http.post("http://localhost:3000/bands/getBandData", { id: id });
+        var req = this.http.post("https://shenkar-band-it.herokuapp.com/bands/getBandData", { id: id });
         req.subscribe(function (data) {
             _this.bandData = data;
         });
@@ -556,7 +556,7 @@ var MenuComponent = /** @class */ (function () {
     function MenuComponent(http) {
         var _this = this;
         this.http = http;
-        var req = this.http.post("http://localhost:3000/users/getUserData", { id: "5cd6c54ca53c5805d94023e1" });
+        var req = this.http.post("https://shenkar-band-it.herokuapp.com/users/getUserData", { id: "5cd6c54ca53c5805d94023e1" });
         req.subscribe(function (data) {
             _this.bands = data.bands;
         });

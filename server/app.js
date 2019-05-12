@@ -23,18 +23,26 @@ app.use('/studio', studio);
 app.use('/users',user);
 app.use('/bands',band);
 
+// app.get('/songstudio',(req,res) => {
+//     app.use(express.static(path.join(__dirname, '../client/build')));
+//     res.sendfile(path.join(__dirname, '../client/build/index.html'))
+// });
+//
+// app.get('/',(req,res)=> {
+//     app.use(express.static(path.join(__dirname, '../app-new/dist/app-new/')));
+//     res.sendfile(path.join(__dirname, '../app-new/dist/app-new/index.html'))
+// });
+
 app.get('/songstudio',(req,res) => {
     app.use(express.static(path.join(__dirname, 'client-studio')));
     res.sendfile(path.join(__dirname, 'client-studio/index.html'))
 });
 
 app.get('/',(req,res)=> {
-    app.use(express.static(path.join(__dirname, 'client-dashboard')));
-    res.sendfile(path.join(__dirname, 'client-dashboard/index.html'))
+    app.use(express.static(path.join(__dirname, 'client-dash')));
+    res.sendfile(path.join(__dirname, 'client-dash/index.html'))
 });
 
-var port = 1234;
-
-app.listen(port, () => {
-    console.log('Server is up and running on port numner ' + port);
+app.listen(3000, () => {
+    console.log('Server is up and running on port numner 3000');
 });

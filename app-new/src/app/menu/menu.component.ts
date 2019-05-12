@@ -12,7 +12,7 @@ export class MenuComponent implements OnInit {
 
   bands : Observable<any>;
   constructor(private http: HttpClient) {
-    const req = this.http.post<any>("http://localhost:1234/users/getUserData",{id:"5cd6c54ca53c5805d94023e1"});
+    const req = this.http.post<any>("http://localhost:3000/users/getUserData",{id:"5cd6c54ca53c5805d94023e1"});
     req.subscribe((data)=>{
       this.bands = data.bands;
     });

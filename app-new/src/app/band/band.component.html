@@ -2,30 +2,24 @@
 <app-menu></app-menu>
   <main>
     <div class="topBand">
-      <img src="..\assets\bandPic.png">
+      <img src={{bandData.icon}}>
       <section>
-        <h3>BAND NAME <span class="glyphicon glyphicon-pencil"></span></h3>
-        <p>djskdjks  jkdjdkljd, uovnmfwmek.</p>
+        <h3>{{bandData.name}}<span class="glyphicon glyphicon-pencil"></span></h3>
+        <p>{{bandData.description}}</p>
       </section>
       <nav class="members">
         <h3>MEMBERS</h3>
-        <nav>
-          <img src="..\assets\persona.png"> <P>NOA MENDEZ</P>
-        </nav>
-        <nav>
-          <img src="..\assets\persona.png"> <P>NOA MENDEZ</P>
+        <nav *ngFor="let member of bandData.members">
+          <img src={{member.icon}}> <P>{{member.firstName}} {{member.lastName}}</P>
         </nav>
       </nav>
       <nav class="songs">
         <h3>SONGS</h3>
-        <nav>
-          <img src="..\assets\BanditLogo.png">
-          <p>SONG NAME</p>
-
-        </nav>
-        <nav>
-          <img src="..\assets\BanditLogo.png">
-          <p>SONG NAME</p>
+        <nav *ngFor="let song of bandData.songs">
+          <a href="{{'/songstudio/?id='+song._id}}">
+            <img src={{bandData.icon}}>
+            <p>{{song.title}}</p>
+          </a>
         </nav>
       </nav>
         <div class="clear"></div>

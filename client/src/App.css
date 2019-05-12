@@ -5,9 +5,6 @@ body {
     color: #95adca;
 }
 
-.header {
-    text-align:center;
-}
 
 .controlButton {
     font-size: 20px !important;
@@ -22,10 +19,16 @@ body {
     color: #95adca !important;
 }
 
+.songDetails {
+    float:left;
+    width:25%;
+    margin: 15px 0px 0px 15px;
+}
+
 .controls {
+    width:50%;
     display: inline-block;
     margin: 5px;
-    border: solid 2px #1e1d22 !important;
 }
 
 .channels {
@@ -133,6 +136,29 @@ body {
     position: absolute;
 }
 
+.deleteAudio {
+    font-size:17px !important;
+    position:absolute !important;
+    top:0;
+    right: 0;
+    color:red !important;
+    min-width: inherit !important;
+    padding: 0 !important;
+    margin:0 !important;
+}
+
+.fileUpload {
+    font-size:0;
+    float:right;
+}
+
+.songTitle {
+    font-size: 18px;
+    border: inherit;
+    background: inherit;
+    color: #95adc9;
+    outline: none;
+}
 #root {
     flex-grow: 1;
 }

@@ -43,6 +43,6 @@ app.get('/',(req,res)=> {
     res.sendfile(path.join(__dirname, 'client-dash/index.html'))
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log('Server is up and running on port numner 3000');
 });

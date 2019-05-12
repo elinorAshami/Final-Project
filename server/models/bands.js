@@ -12,6 +12,11 @@ var BandsSchema = new Schema({
     lmDate: {type: Date, default: Date.now()},
 });
 
+BandsSchema.statics.addNewBand = function(band,cb) {
+    var BandsObjModel = new BandsModel(band);
+    BandsObjModel.save(cb);
+}
+
 BandsSchema.statics.getBandById = function (id,cb) {
     return this.findOne({_id:id},cb);
 }

@@ -22,6 +22,12 @@ ChannelsSchema.statics.addNewChannel = function (channel,cb) {
     ChannelsObjModel.save(cb);
 };
 
+ChannelsSchema.statics.updateChannel = function (channel,cb) {
+    channel.lmDate = new Date();
+    return this.update({_id:channel._id},channel,cb);
+};
+
+
 ChannelsSchema.statics.getChannelsBySongId = function (id,cb) {
     return this.find({songId:id},cb);
 };

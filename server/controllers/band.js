@@ -19,4 +19,28 @@ function getBandData (req,res,next) {
     });
 }
 
-module.exports = {getBandData}
+function createNewBand(req,res,next) {
+    if (!req.body.creator) return next('missingid');
+    const objReq = {
+        managerId : req.body.creator,
+        members: [req.body.creator],
+        name :req.body.name,
+        description: req.body.description,
+        icon : req.body.icon,
+        genre : req.body.genre
+    };
+    BandsModel.addNewBand(objReq,(err,band)=> {
+        if (err) return next(err);
+        res.json({_id: band._id});
+    })
+}
+
+function createNewSong (req,res,next) {
+    if (!req.body.id) return next('missingid');
+    SongsModel.addNewSong(req.body.id,(err,song)=> {
+        if (err) return next(err);
+        res.json({_id: song._id});
+    })
+}
+
+module.exports = {getBandData,createNewSong,createNewBand};

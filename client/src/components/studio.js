@@ -6,7 +6,7 @@ import { faPlay,faStop,faStepBackward,faStepForward,faMicrophone,faMusic,faVolum
 import Slider from '@material-ui/lab/Slider';
 import BufferLoader from '../scripts/BufferLoader'
 import Draggable from 'react-draggable';
-import DATA from '../exampleData.js';
+// import DATA from '../exampleData.js';
 import Waveform from 'waveform-react';
 import {InstrumentImgs} from '../assets/instrumentsImgs';
 import EditableLabel from 'react-inline-editing';
@@ -24,7 +24,7 @@ class Studio extends Component {
             runningTime: 0,
             playing: true,
             playbackTime: 0,
-            channelData: DATA,
+            channelData: [],
             loading:true,
             songId: id,
             title: 'New Song',
@@ -34,7 +34,6 @@ class Studio extends Component {
             .then((res)=>{
             res = res.data;
             that.setState({channelData: res.channels, title: res.title, bpm: res.bpm});
-            console.log(this.state)
             const mappedArr = [];
             res.channels.forEach((channel)=>{
                 channel.audioFiles.forEach((audioClip)=>{
@@ -45,23 +44,27 @@ class Studio extends Component {
             const context = new AudioContext();
             context.suspend();
             this.state.context = context;
-            const bufferLoader = new BufferLoader(
-                context,
-                mappedArr,
-                finishedLoading
-            );
-            bufferLoader.load();
+            if (res.channels.length > 0) {
+                const bufferLoader = new BufferLoader(
+                    context,
+                    mappedArr,
+                    finishedLoading
+                );
+                bufferLoader.load();
 
-            function finishedLoading(bufferList) {
-                let i = 0;
-                const data = that.state.channelData;
-                data.forEach((channel,chIndex)=>{
-                    channel.audioFiles.forEach((audioClip,acIndex)=>{
-                        data[chIndex].audioFiles[acIndex].buffer = bufferList[i];
-                        i++;
-                    })
-                });
-                that.setState({context,loading:false,channelData:data});
+                function finishedLoading(bufferList) {
+                    let i = 0;
+                    const data = that.state.channelData;
+                    data.forEach((channel, chIndex) => {
+                        channel.audioFiles.forEach((audioClip, acIndex) => {
+                            data[chIndex].audioFiles[acIndex].buffer = bufferList[i];
+                            i++;
+                        })
+                    });
+                    that.setState({context, loading: false, channelData: data});
+                }
+            } else {
+                that.setState({loading: false})
             }
         });
 
@@ -133,6 +136,9 @@ class Studio extends Component {
         const channelData = this.state.channelData;
         const loc = data.node.id.split('-');
         channelData[loc[1]].audioFiles[loc[2]].location = data.x;
+        if (!channelData[loc[1]].new) {
+            channelData[loc[1]].edited = true;
+        }
         this.setState(channelData);
     };
 
@@ -155,6 +161,9 @@ class Studio extends Component {
             channelData[ci].audioFiles[ai].bufferSource.disconnect();
         }
         channelData[ci].audioFiles.splice(ai,1);
+        if (!channelData[ci].new) {
+            channelData[ci].edited = true;
+        }
         this.setState({channelData});
     };
 
@@ -180,6 +189,9 @@ class Studio extends Component {
                     headers: { "X-Requested-With": "XMLHttpRequest" },
                 }).then(response => {
                     const data = response.data;
+                    if (!channelData[ci].new) {
+                        channelData[ci].edited = true;
+                    }
                     channelData[ci].audioFiles.push({
                         location:0,
                         audioUrl: data.secure_url,
@@ -199,6 +211,8 @@ class Studio extends Component {
             songId: this.state.songId,
             title: this.state.title,
             bpm: this.state.bpm
+        }).then((res)=>{
+            window.alert(res);
         })
         // let files = [];
         // this.state.channelData.forEach((channel)=>{

@@ -11,15 +11,23 @@ import {ActivatedRoute} from "@angular/router";
 export class BandComponent implements OnInit {
 
   bandData : Observable<any>;
+  id : string;
+
   constructor(private http: HttpClient,private route: ActivatedRoute) {
-    let id;
     this.route.params.subscribe(params => {
-      id = params['id'];
+      this.id = params['id'];
     });
-    const req = this.http.post<any>("https://shenkar-band-it.herokuapp.com/bands/getBandData",{id});
+    const req = this.http.post<any>("https://shenkar-band-it.herokuapp.com/bands/getBandData",{id: this.id});
     req.subscribe((data)=>{
       this.bandData = data;
     });
+  }
+
+  public createNewSong() {
+      const req = this.http.post<any>("https://shenkar-band-it.herokuapp.com/bands/createNewSong",{id: this.id});
+      req.subscribe((data)=>{
+        window.location.href = 'https://shenkar-band-it.herokuapp.com/songstudio/?id='+data._id
+      })
   }
 
   ngOnInit() {

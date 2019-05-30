@@ -1,4 +1,5 @@
-var DATA = [{
+var DATA = [
+    {
     'instrument': 'bass',
     'id': 1,
     'title': 'Gady Bass',

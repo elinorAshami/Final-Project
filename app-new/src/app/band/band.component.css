@@ -54,7 +54,7 @@ main{
   direction: ltr;
   float: left;
   margin-left: 5%;
-  margin-top:10%;
+  margin-top:24px;
   display: inline;
 }
 .topBand nav{
@@ -95,4 +95,12 @@ main{
 }
 .songs h3{
   margin-left: 5%;
+}
+
+.songs p {
+  color:white;
+}
+
+h3 {
+  margin-bottom:20px;
 }

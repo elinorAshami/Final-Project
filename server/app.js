@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 app.use('/studio', studio);
 app.use('/users',user);
 app.use('/bands',band);
-
+//
 // app.get('/songstudio',(req,res) => {
 //     app.use(express.static(path.join(__dirname, '../client/build')));
 //     res.sendfile(path.join(__dirname, '../client/build/index.html'))
@@ -39,6 +39,11 @@ app.get('/songstudio',(req,res) => {
 });
 
 app.get('/',(req,res)=> {
+    app.use(express.static(path.join(__dirname, 'client-dash')));
+    res.sendfile(path.join(__dirname, 'client-dash/index.html'))
+});
+
+app.get('/bands/:id',(req,res)=> {
     app.use(express.static(path.join(__dirname, 'client-dash')));
     res.sendfile(path.join(__dirname, 'client-dash/index.html'))
 });

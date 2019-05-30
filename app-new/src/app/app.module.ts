@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
-
 import { AppRoutingModule } from './app-routing.module';
+
 import { AppComponent } from './app.component';
 import { IndexComponent } from './index/index.component';
 import { BandComponent } from './band/band.component';
@@ -13,7 +13,11 @@ import { NewBandComponent } from './new-band/new-band.component';
 import { ProfileComponent } from './profile/profile.component';
 import { InviteFriendComponent } from './invite-friend/invite-friend.component';
 import { BoardComponent } from './board/board.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule , ReactiveFormsModule} from "@angular/forms";
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import { TestComponent } from './test/test.component';
+
 
 
 @NgModule({
@@ -28,13 +32,17 @@ import {FormsModule} from "@angular/forms";
     ProfileComponent,
     InviteFriendComponent,
     BoardComponent,
+    LoginComponent,
+    RegisterComponent,
+    TestComponent,
 
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

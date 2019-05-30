@@ -2,12 +2,12 @@
 <main>
       <form (submit)="createBand($event)">
           <label> Band name: </label> <input type="text" [(ngModel)]="bandName" name="bandName"><br>
-          <label> Janner: </label>
+          <label> Genre: </label>
             <select [(ngModel)]="janner" name="janner">
-              <option> Janner1 </option>
-              <option> Janner2 </option>
-              <option> Janner3 </option>
-              <option> Janner4 </option>
+              <option> Genre1 </option>
+              <option> Genre2 </option>
+              <option> Genre3 </option>
+              <option> Genre4 </option>
             </select><br>
           <label> Description: </label>
           <textarea [(ngModel)]="description" name="description"></textarea><br>

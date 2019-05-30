@@ -21,31 +21,6 @@ router.get('/tasks' , function (req , res , next) {
   });
 });
 
-/*router.post('/new-band' , function(req,res,next) {
-  createBand(req,res);
-});
-
-async function createBand(req,res){
-
-  var band = new Band({
-    bandname: req.body.bandname,
-    bandtype: req.body.bandtype,
-    discription: req.body.discription,
-    bandImg: req.body.bandImg,
-    creation_dt: Date.now()
-  });
-
-  try {
-    doc = await band.save();
-    return res.status(201);
-  }
-  catch (err) {
-    return res.status(501).json(err);
-
-  }
-}*/
-
-
 // Get single name
 
 module.exports = router;

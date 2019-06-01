@@ -22,6 +22,7 @@
     "@angular/router": "~7.2.0",
     "@types/rx": "^4.1.1",
     "awsome": "^0.6.0",
+    "bcrypt": "^3.0.6",
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
     "ejs": "^2.6.1",

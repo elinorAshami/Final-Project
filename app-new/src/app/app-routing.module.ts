@@ -15,6 +15,7 @@ import {TestComponent} from "./test/test.component";
 
 const routes: Routes = [
   { path: '' , component: LoginComponent },
+  { path: 'index' , component: IndexComponent },
   { path: 'band/:id' , component: BandComponent },
   { path: 'studio' , component: StudioComponent},
   { path: 'favoriets' , component: FavorietsComponent},

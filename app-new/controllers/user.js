@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var User= require ('..//models/user'); //  ref to MODEL
+var User = require ('..//models/user'); //  ref to MODEL
 var mongoose = require('mongoose');
 
 
@@ -9,7 +9,6 @@ const conn = mongoose.connection; //get default connection
 
 router.post('/register',function (req,res,next) {
   addUser(req, res);
-  console.log('helooo');
 });
 
 async function addUser(req,res){
@@ -17,7 +16,8 @@ async function addUser(req,res){
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,
-    pass: req.body.pass,
+    genre: req.body.genre,
+    pass: User.hashPassword(req.body.pass),
     cDate: Date.now()
   });
   try{

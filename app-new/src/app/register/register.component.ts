@@ -12,10 +12,11 @@ import {Router} from "@angular/router";
 export class RegisterComponent implements OnInit {
 
   registerForm:FormGroup = new FormGroup({
-    email: new FormControl(null,[Validators.email , Validators.required]),
     firstName: new FormControl(null, Validators.required),
     lastName: new FormControl(null, Validators.required),
-    password: new FormControl(null, Validators.required),
+    email: new FormControl(null,[Validators.email , Validators.required]),
+    genre: new FormControl( null, Validators.required),
+    pass: new FormControl(null, Validators.required),
     cpass: new FormControl(null, Validators.required),
   });
 
@@ -25,7 +26,7 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-    if ( !this.registerForm.valid  ) {
+    if ( !this.registerForm.valid || ( this.registerForm.controls.pass.value != this.registerForm.controls.cpass.value) ) {
       console.log('Invalid Form');
       return;
     }

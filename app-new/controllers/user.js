@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var User = require ('..//models/user'); //  ref to MODEL
-var mongoose = require('mongoose');
+var passport = require('passport');
+
+var app = express();
 
 
-mongoose.connect('mongodb://user1:e.123456@ds255767.mlab.com:55767/bandit'); //db
-const conn = mongoose.connection; //get default connection
+
 
 router.post('/register',function (req,res,next) {
   addUser(req, res);
@@ -28,4 +29,39 @@ async function addUser(req,res){
     return res.status(501).json(err);
   }
 }
+
+
+router.post('/login',function (req,res,next) {
+  passport.authenticate('local', function (err, user, info) {
+    if (err){
+      return res.status(501).json(err);
+    }
+    if (!user){
+      return res.status(501).json(info);
+    }
+    req.logIn(user, function(err) {
+      if (err){
+        return res.status(501).json(err);
+      }
+      return res.status(200).json({message:'Login Success'});
+    });
+  })(req, res, next);
+});
+
+router.get('/user', isValidUser, function (req,res,next) {
+  return res.status(200).json(req.user);
+});
+
+router.get('/logout', isValidUser, function (req,res,next) {
+  req.logout();
+  return res.status(200).json({message:'Logout Success'});
+});
+
+function isValidUser(req,res,next){
+  if ( req.isAuthenticated() )
+    next();
+  else
+    return res.status(401).json({message: 'Invalid Request'});
+}
+
 module.exports = router;

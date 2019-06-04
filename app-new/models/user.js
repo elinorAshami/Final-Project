@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
 
 
-var UsersSchema = new Schema({
+var User = new Schema({
   firstName : String,
   lastName : String,
   icon : String,
@@ -16,12 +16,12 @@ var UsersSchema = new Schema({
   instrument : [{type: String, enum : ["guitar","vocal","bass","drums"]}],
 });
 
-UsersSchema.statics.hashPassword = function hashPassword( pass ){
+User.statics.hashPassword = function hashPassword( pass ){
   return bcrypt.hashSync( pass , 10 );
 }
 
-UsersSchema.methods.isValid = function ( hashPassword ){
+User.methods.isValid = function ( hashPassword ){
   return bcrypt.compareSync( hashPassword , this.pass );
 }
 
-module.exports = mongoose.model('users', UsersSchema);
+module.exports = mongoose.model('users', User);

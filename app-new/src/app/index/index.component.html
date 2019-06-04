@@ -3,11 +3,14 @@
 <div id="wrapper">
 <app-menu></app-menu>
   <main>
+    <div class="logout">
+       {{firstName}} {{lastName}}
+      <button  (click)="logout()"> Log Out </button>
+    </div>
     <div class="search-box">
       <input type="text" name="" placeholder="Searh Library"> <span class="glyphicon glyphicon-search"></span>
     </div>
     <div class="topRight">
-
       <div> TOP 5 SONGS
         <nav *ngFor="let band of bands; let i=index">
           <!--<img src="#">-->

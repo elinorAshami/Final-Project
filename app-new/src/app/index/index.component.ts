@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-// import { BandsService} from "../bands.service";
-// import { Bands } from  '../Bands';
-import {ActivatedRoute} from "@angular/router";
+import {RegisterService} from "../register.service";
+import {Router} from "@angular/router";
+
+
 
 @Component({
   selector: 'app-index',
@@ -10,17 +11,31 @@ import {ActivatedRoute} from "@angular/router";
 })
 
 export class IndexComponent implements OnInit {
-    // bands : Bands[] =[];
 
+  firstName:String='';
+  lastName:String='';
 
-  constructor() {
-    // this.bandService.getBands()
-    //   .subscribe(bands => {
-    //     this.bands = bands;
-    //     console.log(this.bands);
-    //   })
+  constructor(private _user:RegisterService, private _router:Router) {
+    this._user.user()
+      .subscribe(
+        data=>this.addName(data),
+        error=>this._router.navigate(['/login'])
+      )
   }
+  addName(data){
+    this.firstName = data.firstName;
+    this.lastName = data.lastName;
+  }
+
   ngOnInit() {
+  }
+
+  logout(){
+    this._user.logout()
+      .subscribe(
+        data=>{ console.log(data); this._router.navigate(['/login'])},
+        error=>console.error(error)
+      )
   }
 
 }

@@ -16,6 +16,10 @@ var User = new Schema({
   instrument : [{type: String, enum : ["guitar","vocal","bass","drums"]}],
 });
 
+User.statics.getUserById = function (id,cb) {
+  return this.findOne({_id:id},cb);
+}
+
 User.statics.hashPassword = function hashPassword( pass ){
   return bcrypt.hashSync( pass , 10 );
 }

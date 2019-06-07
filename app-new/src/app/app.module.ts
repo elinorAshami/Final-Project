@@ -17,6 +17,7 @@ import {FormsModule , ReactiveFormsModule} from "@angular/forms";
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { TestComponent } from './test/test.component';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 
 
@@ -35,6 +36,7 @@ import { TestComponent } from './test/test.component';
     LoginComponent,
     RegisterComponent,
     TestComponent,
+    EditProfileComponent,
 
   ],
   imports: [

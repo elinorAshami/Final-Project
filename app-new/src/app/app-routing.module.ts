@@ -11,10 +11,10 @@ import { InviteFriendComponent } from './invite-friend/invite-friend.component';
 import { ProfileComponent } from './profile/profile.component';
 import { LoginComponent} from "./login/login.component";
 import { RegisterComponent} from "./register/register.component";
-import {TestComponent} from "./test/test.component";
+import { EditProfileComponent} from "./edit-profile/edit-profile.component";
 
 const routes: Routes = [
-  { path: '' , component: LoginComponent },
+  { path: '' , component: IndexComponent },
   { path: 'index' , component: IndexComponent },
   { path: 'band/:id' , component: BandComponent },
   { path: 'studio' , component: StudioComponent},
@@ -22,10 +22,11 @@ const routes: Routes = [
   { path: 'board' , component: BoardComponent},
   { path: 'new-band' , component: NewBandComponent},
   { path: 'invite-friend' , component: InviteFriendComponent},
-  { path: 'profile' , component: ProfileComponent},
+  { path: 'profile/:id' , component: ProfileComponent},
   { path: 'login' , component: LoginComponent},
   { path: 'register' , component: RegisterComponent},
-  { path: 'test' , component: TestComponent}
+  { path: 'editProfile/:id' , component: EditProfileComponent}
+
 ];
 
 @NgModule({

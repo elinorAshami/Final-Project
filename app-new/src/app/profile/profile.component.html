@@ -1,2 +1,24 @@
-<app-menu></app-menu>
-<h1>MY PROFILE IN PROGRESS...</h1>
+<body>
+  <app-menu></app-menu>
+  <div class="wrapper">
+    <div class="userDiv">
+          <div class="Details">
+                <h1> {{firstName}} {{lastName}}
+                  <a (click) = "goToEdit()">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                  </a>
+                </h1> <br><br>
+                <ul class="container details">
+                  <li><p><span class="glyphicon glyphicon-user"></span> {{firstName}} {{lastName}}</p></li>
+                  <li><p><span class="glyphicon glyphicon-envelope one"></span>{{email}}</p></li>
+                  <li><p><span class="glyphicon glyphicon-tag"></span>{{genre}}</p></li>
+                </ul> <br><br>
+          </div>
+      <div class="photo">
+          <img [src]="imageUrl">
+      </div>
+      <div class="clear"></div>
+    </div>
+
+  </div>
+</body>

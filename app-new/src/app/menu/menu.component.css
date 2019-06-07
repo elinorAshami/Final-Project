@@ -12,14 +12,13 @@ ul{
   width:100px;
   height:100px;
   position:absolute;
-  margin-top: 10%;
+  margin-top: 2%;
 }
 #menu{
   background-color: #191970;
   width: 18%;
   float: left;
   height:100%;
-  position:fixed;
   bottom: 0;
 }
 a{
@@ -47,5 +46,9 @@ li:hover{
 .line{
   border-bottom: 1px solid white;
   padding-bottom: 20%;
+}
+span{
+  color: orange;
+  margin-right: 4%;
 }
 

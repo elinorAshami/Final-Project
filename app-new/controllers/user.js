@@ -29,7 +29,47 @@ async function addUser(req,res){
     return res.status(501).json(err);
   }
 }
+router.post('/updateUser', (req, res) =>{
+  console.log('hi');
+  //var Email = req.body.email;
+  //console.log(Email);
+  var ID = req.body.id
+  console.log(ID)
+  User.findOne({_id: ID} , function (err, foundObject) {
 
+    if (err) {
+     console.log(err);
+      console.log('Error!');
+      res.status(500).send();
+    }
+    else {
+      if (!foundObject){
+        res.status(404).send();
+        console.log('Not found object');
+      } else {
+        if (req.body.firstName) {
+          foundObject.firstName = req.body.firstName;
+        }
+        if (req.body.lastName)  {
+          foundObject.lastName = req.body.lastName;
+        }
+        if (req.body.email){
+          foundObject.email = req.body.email
+        }
+
+        foundObject.save(function (err, updateObject) {
+          if (err){
+            console.log(err);
+            res.status(500).send();
+          } else {
+            res.send(updateObject);
+          }
+        })
+      }
+    }
+  });
+
+});
 
 router.post('/login',function (req,res,next) {
   passport.authenticate('local', function (err, user, info) {
@@ -63,5 +103,6 @@ function isValidUser(req,res,next){
   else
     return res.status(401).json({message: 'Invalid Request'});
 }
+
 
 module.exports = router;

@@ -24,6 +24,7 @@
     "awsome": "^0.6.0",
     "bcrypt": "^3.0.6",
     "bootstrap": "^4.3.1",
+    "connect-mongo": "^2.0.3",
     "core-js": "^2.5.4",
     "cors": "^2.8.5",
     "ejs": "^2.6.1",

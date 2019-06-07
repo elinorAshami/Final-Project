@@ -1,17 +1,19 @@
 <nav id="menu">
-  <a routerLink="/" id="logo"></a>
+  <a routerLink="/index" id="logo"></a>
   <ul>
-    <li> <span class="glyphicon glyphicon-search"></span> <a routerLink="/" >EXPLORE</a>
-    </li>
-    <li > <a routerLink="/studio" >MY STUDIO</a> </li>
-    <li > <a routerLink="/favoriets" >FAVORITES</a> </li>
-    <li class="line" ><a routerLink="/board" >THE BOARD</a> </li>
+    <li> <span class="glyphicon glyphicon-headphones"></span> <a routerLink="/index" >EXPLORE</a></li>
+    <li > <span class="glyphicon glyphicon-signal"></span> <a routerLink="/studio" >MY STUDIO</a> </li>
+    <li > <span class="glyphicon glyphicon-heart-empty"></span> <a routerLink="/favoriets" >FAVORITES</a> </li>
+
+    <li class="line" > <span class="glyphicon glyphicon-music"></span> <a routerLink="/board" >THE BOARD</a> </li>
     <li *ngFor="let band of bands" style="color:white;">
       <a routerLink="{{'/band/'+band._id}}">{{band.name}}</a>
     </li>
-    <li class="line" ><a routerLink="/new-band" >CREATE NEW BAND</a> </li>
-    <li ><a routerLink="/invite-friend" >INVITE A FRIEND</a> </li>
-    <li ><a routerLink="/profile" >MY PROFILE</a> </li>
+    <li class="line" ><span class="glyphicon glyphicon-plus-sign"></span><a routerLink="/new-band" >CREATE NEW BAND</a> </li>
+    <li ><span class="glyphicon glyphicon-plus-sign"></span><a routerLink="/invite-friend" >INVITE A FRIEND</a> </li>
+
+
+    <li ><span class="glyphicon glyphicon-user"></span><a routerLink="/profile/:id">MY PROFILE</a> </li>
   </ul>
 </nav>
 

@@ -11,12 +11,12 @@
             </select><br>
           <label> Description: </label>
           <textarea ngModel name="description"></textarea><br>
-          <label> Icon URL: </label> <input type="text" ngModel name="icon"><br>
+          <!--<label> Icon URL: </label> <input type="text" ngModel name="icon"><br>-->
           <!--<label> Add members: </label> <input type="text"><br>-->
-          <!--<div class="custom-file mb-3">-->
-            <!--<input type="file" class="custom-file-input">-->
-            <!--<label for="file" class="custom-file-label"> Add band photo </label><br>-->
-          <!--</div>-->
+          <div class="custom-file mb-3">
+            <input type="file" ngModel name="icon" class="custom-file-input">
+            <label for="file" class="custom-file-label"> Add band photo </label><br>
+          </div>
           <input type="submit" value="Submit" class="btn btn-primary">
       </form>
 </main>

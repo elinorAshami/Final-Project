@@ -1,0 +1,23 @@
+<body>
+<app-menu></app-menu>
+  <main>
+    <div class="topBand">
+
+      <img src="#">
+
+      <section>
+        <form [formGroup]="newBandForm" >
+          <h4> <input formControlName="name" value = "{{bandData.name}}" >  </h4><br>
+          <h4> <input formControlName="genre" value = "{{bandData.genre}}"> </h4>
+          <p> <textarea  formControlName="description" value = " {{bandData.description}} "></textarea> </p> <br>
+
+          <button (click)="updateBand()" type="submit"> Submit </button>
+        </form>
+      </section>
+
+
+
+    </div>
+  </main>
+</body>
+

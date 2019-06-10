@@ -12,6 +12,5 @@ function getUserData (req,res,next) {
             res.json(user);
         });
     });
-}
 
 module.exports = {getUserData}

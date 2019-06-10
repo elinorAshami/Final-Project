@@ -32,6 +32,13 @@ main{
 }
 .logout{
   float: right;
+  margin-left: 2%;
+}
+button{
+  background-color: midnightblue;
+  color: white;
+  padding: 2%;
+  width: 85px;
 }
 
 ul{
@@ -101,6 +108,6 @@ input{
   float:right;
 }
 h3{
-  margin-right: 15px;
+  float: right;
 }
 

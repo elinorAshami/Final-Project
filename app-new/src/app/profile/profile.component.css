@@ -10,10 +10,10 @@
 .userDiv{
   width: 80%;
   margin: auto;
-  margin-top: 15%;
+  margin-top: 10%;
   padding: 5%;
 }
-h1{
+h2{
   border-bottom: black 1px solid;
 }
 .Details{
@@ -38,4 +38,8 @@ span{
 li{
   font-size: 15px;
   text-decoration: none;
+}
+h3{
+  float: right;
+  margin: 2%;
 }

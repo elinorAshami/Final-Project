@@ -54,7 +54,13 @@ router.post('/updateUser', (req, res) =>{
           foundObject.lastName = req.body.lastName;
         }
         if (req.body.email){
-          foundObject.email = req.body.email
+          foundObject.email = req.body.email;
+        }
+        if (req.body.genre){
+          foundObject.genre = req.body.genre;
+        }
+        if (req.body.icon){
+          foundObject.icon = req.body.icon;
         }
 
         foundObject.save(function (err, updateObject) {

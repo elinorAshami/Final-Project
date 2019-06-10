@@ -10,6 +10,7 @@ const app = express();
 //const index = require('./routes/index');
 const tasks = require('./routes/tasks');
 const users = require('./controllers/user');
+const bands = require('./controllers/band');
 
 app.use(cors({
   origin: 'http://localhost:3000',
@@ -55,6 +56,7 @@ app.use(express.static(path.join('dist/app-new')));
 //app.use('/index' , index);
 app.use('/api' , tasks);
 app.use('/user' , users);
+app.use('/band' , bands);
 
 // Set Port
 const port = process.env.PORT || '3000';

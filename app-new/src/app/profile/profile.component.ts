@@ -40,7 +40,6 @@ export class ProfileComponent implements OnInit {
 
   goToEdit(){
     this.router.navigate(['/editProfile/:id'] );
-
   }
 
 }

@@ -1,6 +1,6 @@
 .wrapper{
   width: 82%;
-  float: left;
+  float: right;
   height: 770px;
   background-color:#DCDCDC;
 }
@@ -8,13 +8,14 @@
   clear:both;
 }
 .userDiv{
-  width: 80%;
+  width: 90%;
   margin: auto;
   margin-top: 10%;
   padding: 5%;
+
 }
 h2{
-  border-bottom: black 1px solid;
+  text-align: center;
 }
 .Details{
   width: 45%;
@@ -43,7 +44,7 @@ h1{
   text-align: center;
 }
 select{
-  width: 60%;
+  width: 73%;
   display: inline;
 }
 button{
@@ -65,6 +66,6 @@ button:focus {
   border-color: #1CA347;
 }
 h3{
-  float: right;
+  border-bottom: black 1px solid;
   margin: 2%;
 }

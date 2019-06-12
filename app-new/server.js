@@ -50,6 +50,8 @@ app.use(bodyParser.urlencoded({ extended: false}));
 
 // Set Static Folder
 app.use(express.static(path.join('dist/app-new')));
+app.use(express.static( path.join( __dirname )) );
+
 
 
 //app.use('/' , index);

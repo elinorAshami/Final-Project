@@ -1,8 +1,9 @@
 .wrapper{
   width: 82%;
-  float: left;
+  float: right;
   height: 770px;
   background-color:#DCDCDC;
+  border: 1px solid black;
 }
 .clear{
   clear:both;

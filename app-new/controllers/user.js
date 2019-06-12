@@ -1,7 +1,12 @@
+var mongoose = require('mongoose');
+
 var express = require('express');
 var router = express.Router();
 var User = require ('..//models/user'); //  ref to MODEL
 var passport = require('passport');
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'});
+const  imageTypes = ['image/jpeg', 'image/png', 'images/gif']
 
 var app = express();
 
@@ -29,12 +34,12 @@ async function addUser(req,res){
     return res.status(501).json(err);
   }
 }
-router.post('/updateUser', (req, res) =>{
+router.post('/updateUser', upload.single('userImg') ,(req, res) =>{
   console.log('hi');
   //var Email = req.body.email;
   //console.log(Email);
-  var ID = req.body.id
-  console.log(ID)
+  var ID = req.body.id;
+  console.log(ID);
   User.findOne({_id: ID} , function (err, foundObject) {
 
     if (err) {
@@ -76,6 +81,7 @@ router.post('/updateUser', (req, res) =>{
   });
 
 });
+
 
 router.post('/login',function (req,res,next) {
   passport.authenticate('local', function (err, user, info) {

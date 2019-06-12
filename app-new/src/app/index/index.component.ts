@@ -19,7 +19,7 @@ export class IndexComponent implements OnInit {
     this._user.user()
       .subscribe(
         data=>this.addName(data),
-        error=>this._router.navigate(['/login'])
+      error=>this._router.navigate(['/login'])
       )
   }
   addName(data){

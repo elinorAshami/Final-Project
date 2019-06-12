@@ -1,16 +1,13 @@
 <body>
 <app-menu></app-menu>
 <div class="wrapper">
-  <h3>{{firstName}} {{lastName}} </h3>
   <div class="userDiv">
-    <h1> EDIT MY PROFILE </h1><br>
-
+    <h2> EDIT MY PROFILE </h2><br>
 
         <form method="post" role="form" [formGroup]="userForm">
-
           <div class="Details">
-              <h2> {{firstName}} {{lastName}} </h2> <br><br>
               <ul class="container details">
+                <h3> {{firstName}} {{lastName}} </h3> <br><br>
                 <li><p><span class="glyphicon glyphicon-user"></span> <input  formControlName="firstName" value="{{firstName}}"> </p></li>
                 <li><p><span class="glyphicon glyphicon-user"></span> <input  formControlName="lastName" value="{{lastName}}"> </p></li>
                 <li><p><span class="glyphicon glyphicon-envelope one"></span> <input type="email" formControlName="email" value="{{email}}"> </p></li>

@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 import '../App.css';
 import Button from '@material-ui/core/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlay,faStop,faStepBackward,faStepForward,faMicrophone,faMusic,faVolumeMute, faHeadphones,faPause,faPlus,faWindowClose,faSave } from '@fortawesome/free-solid-svg-icons'
+import { faMagic,faStepBackward,faCloudDownloadAlt,faFileExport, faPlay,faStop,faMusic,faVolumeMute, faHeadphones,faPause,faPlus,faWindowClose,faSave } from '@fortawesome/free-solid-svg-icons'
 import Slider from '@material-ui/lab/Slider';
 import BufferLoader from '../scripts/BufferLoader'
 import Draggable from 'react-draggable';
-// import DATA from '../exampleData.js';
 import Waveform from 'waveform-react';
 import {InstrumentImgs} from '../assets/instrumentsImgs';
 import EditableLabel from 'react-inline-editing';
 import axios from 'axios';
+import Recorder from 'recorderjs';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 class Studio extends Component {
     constructor(props){
@@ -18,6 +19,7 @@ class Studio extends Component {
         const that = this;
         let urlparams = (new URL(document.location)).searchParams;
         let id = urlparams.get("id");
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
         this.state = {
             volume: 100,
             spacing: 8,
@@ -28,43 +30,54 @@ class Studio extends Component {
             loading:true,
             songId: id,
             title: 'New Song',
-            bpm: 120
+            bpm: 120,
+            newAudioFiles: [],
+            context: new AudioContext(),
+            key: 'Cmaj',
+            timeSignature: '4/4',
+            deletedChannels: []
         };
+        this.state.context.suspend();
+        this.getImpulse();
         axios.post('https://shenkar-band-it.herokuapp.com/studio/getDataForStudio',{id})
             .then((res)=>{
             res = res.data;
-            that.setState({channelData: res.channels, title: res.title, bpm: res.bpm});
-            const mappedArr = [];
-            res.channels.forEach((channel)=>{
-                channel.audioFiles.forEach((audioClip)=>{
-                    mappedArr.push(audioClip.audioUrl);
-                })
-            });
-            window.AudioContext = window.AudioContext||window.webkitAudioContext;
-            const context = new AudioContext();
-            context.suspend();
-            this.state.context = context;
+            that.setState({channelData: res.channels, title: res.title, bpm: res.bpm, key: res.key, timeSignature: res.timeSignature, lastExportedUrl: res.lastExportedUrl});
+            console.log(this.state);
+            let loadingCounter = 0;
             if (res.channels.length > 0) {
-                const bufferLoader = new BufferLoader(
-                    context,
-                    mappedArr,
-                    finishedLoading
-                );
-                bufferLoader.load();
+                res.channels.forEach((channel, index) => {
+                    const gainNode = that.state.context.createGain();
+                    res.channels[index].gainNode = gainNode;
+                    if (channel.audioFiles.length > 0) {
+                        const mappedAudioUrls = [];
+                        channel.audioFiles.forEach((audioClip) => {
+                            mappedAudioUrls.push(audioClip.audioUrl);
+                        });
+                        const bufferLoader = new BufferLoader(
+                            that.state.context,
+                            mappedAudioUrls,
+                            finishedLoading
+                        );
+                        bufferLoader.load();
+                    } else {
+                        finishedLoading([]);
+                    }
 
-                function finishedLoading(bufferList) {
-                    let i = 0;
-                    const data = that.state.channelData;
-                    data.forEach((channel, chIndex) => {
-                        channel.audioFiles.forEach((audioClip, acIndex) => {
-                            data[chIndex].audioFiles[acIndex].buffer = bufferList[i];
-                            i++;
-                        })
-                    });
-                    that.setState({context, loading: false, channelData: data});
-                }
+                    function finishedLoading(bufferList) {
+                        loadingCounter++;
+                        console.log(loadingCounter);
+                        bufferList.forEach((buffer, bufferIndex) => {
+                            res.channels[index].audioFiles[bufferIndex].buffer = buffer;
+                        });
+                        if (loadingCounter === res.channels.length) {
+                            that.setState({loading: false});
+                            that.setState({channelData: res.channels});
+                        }
+                    }
+                })
             } else {
-                that.setState({loading: false})
+                that.setState({loading: false});
             }
         });
 
@@ -88,21 +101,71 @@ class Studio extends Component {
     }
 
 
-    changeVolume = (event, volume) => {
-        this.setState({ volume });
+    changeVolume = (event, volume,channelIndex) => {
+        console.log(event,volume,channelIndex);
+        let channelData = this.state.channelData;
+        channelData[channelIndex].edited = true;
+        channelData[channelIndex].audioEffects.volume = volume / 100;
+        channelData[channelIndex].gainNode.gain.value = volume / 100;
+        this.setState({ channelData });
     };
 
-    playAll = () => {
-        const channelData = this.state.channelData;
-        this.state.context.resume();
-        this.state.channelData.forEach((channel,ci)=>{
-            channel.audioFiles.forEach((audio,ai) => {
-                let bufferSource = this.state.context.createBufferSource();
-                bufferSource.buffer = audio.buffer;
-                bufferSource.connect(this.state.context.destination);
-                bufferSource.start(this.state.context.currentTime + audio.location/this.state.spacing);
-                channelData[ci].audioFiles[ai].bufferSource = bufferSource;
+    editEffect = (effect,value,channelIndex) => {
+        let channelData = this.state.channelData;
+        channelData[channelIndex].edited = true;
+        channelData[channelIndex].audioEffects[effect] = value;
+        this.setState({channelData});
+    };
+
+
+    updateSongLength() {
+        let length = 0;
+        this.state.channelData.forEach((channel) => {
+            channel.audioFiles.forEach((audioFile) => {
+                console.log('duration',audioFile.buffer.duration);
+               const audioDuration = (audioFile.location / this.state.spacing) + audioFile.buffer.duration;
+               if (audioDuration > length) {
+                   length = audioDuration;
+               }
             })
+        });
+        this.setState({length});
+        return length;
+    }
+
+    playAll = (recording) => {
+        let channelData = this.state.channelData;
+        const that = this;
+        this.state.context.resume();
+        const mainGain = that.state.context.createGain();
+        this.setState({mainGain});
+        this.state.channelData.forEach((channel,ci)=>{
+            if (!this.state.suspended) {
+                channel.audioFiles.forEach((audio, ai) => {
+                    let bufferSource = that.state.context.createBufferSource();
+                    let initNode = that.state.context.createGain();
+                    bufferSource.buffer = audio.buffer;
+                    bufferSource.connect(initNode);
+                    let delayNode = this.addDelayEffect(initNode,channel.audioEffects.delay);
+                    let distortionNode = this.addDistortionEffect(delayNode,channel.audioEffects.distortion);
+                    let reverbNode = this.addReverbEffect(distortionNode,channel.audioEffects.reverb);
+                    reverbNode.connect(channel.gainNode);
+                    channel.gainNode.connect(mainGain);
+                    bufferSource.start(that.state.context.currentTime + audio.location / this.state.spacing);
+                    channelData[ci].audioFiles[ai].bufferSource = bufferSource;
+                    console.log('recording',recording);
+                    channel.gainNode.gain.value = channel.audioEffects.volume;
+                    if (!recording) {
+                        channel.gainNode.connect(that.state.context.destination);
+                    } else {
+                        channel.gainNode.disconnect();
+                    }
+                    this.setState({channelData});
+                    return mainGain;
+                })
+            } else {
+                this.setState({suspended:false})
+            }
         });
         this.setState(state => {
             if (state.status) {
@@ -123,13 +186,15 @@ class Studio extends Component {
     };
     stopAll = () => {
         clearInterval(this.timer); // new
+        const that = this;
+        this.state.context.suspend();
         this.state.channelData.forEach((channel)=>{
             channel.audioFiles.forEach((audio) => {
-                audio.bufferSource.stop(this.state.context.currentTime);
-            })
+                audio.bufferSource.stop(that.state.context.currentTime);
+            });
         });
-        this.state.context.suspend();
-        this.setState({runningTime: 0, status: false, suspended: true });
+
+        this.setState({runningTime: 0, status: false, suspended: false});
     };
 
     handleDrag = (e,data) => {
@@ -143,12 +208,18 @@ class Studio extends Component {
     };
 
     addChannel = () => {
+        //TODO Create context and gain node
         console.log("add channel")
         let channelData = this.state.channelData;
         channelData.push({
             'instrument': 'audio',
             'title': 'New Channel',
-            'effects': [],
+            'audioEffects': {
+                volume: 1,
+                distortion:0,
+                delay:0,
+                reverb:0,
+            },
             'audioFiles': [],
             'new': true
         });
@@ -177,28 +248,32 @@ class Studio extends Component {
         reader1.onload = function(ev) {
             that.state.context.decodeAudioData(ev.target.result).then(function(buffer) {
                 // Initial FormData
-                const formData = new FormData();
-                formData.append("file", file);
-                // formData.append("tags", `codeinfuse, medium, gist`);
-                formData.append("upload_preset", "biwlw0dl"); // Replace the preset name with your own
-                formData.append("api_key", "228417225742266"); // Replace API key with your own Cloudinary key
-                formData.append("timestamp", (Date.now() / 1000) | 0);
-
-                // Make an AJAX upload request using Axios (replace Cloudinary URL below with your own)
-                axios.post("https://api.cloudinary.com/v1_1/voiera/video/upload", formData, {
-                    headers: { "X-Requested-With": "XMLHttpRequest" },
-                }).then(response => {
-                    const data = response.data;
-                    if (!channelData[ci].new) {
-                        channelData[ci].edited = true;
-                    }
-                    channelData[ci].audioFiles.push({
-                        location:0,
-                        audioUrl: data.secure_url,
-                        buffer : buffer,
-                    });
-                    that.setState({channelData,loading: false});
+                // file.timeId = new Date().getTime();
+                console.log(file);
+                const newAudioFiles = that.state.newAudioFiles;
+                newAudioFiles.push(file);
+                that.setState({newAudioFiles})
+                // formData.append("file", file);
+                // formData.append("upload_preset", "biwlw0dl");
+                // formData.append("api_key", "228417225742266");
+                // formData.append("timestamp", (Date.now() / 1000) | 0);
+                // axios.post("https://api.cloudinary.com/v1_1/voiera/video/upload", formData, {
+                //     headers: { "X-Requested-With": "XMLHttpRequest" },
+                // }).then(response => {
+                // const data = response.data;
+                if (!channelData[ci].new) {
+                    channelData[ci].edited = true;
+                }
+                channelData[ci].audioFiles.push({
+                    location:0,
+                    name: file.name,
+                    size: file.size,
+                    // audioUrl: data.secure_url,
                 });
+                that.setState({channelData});
+                // BUG FIX
+                channelData[ci].audioFiles[channelData[ci].audioFiles.length - 1].buffer = buffer;
+                that.setState({channelData,loading: false});
             });
         };
         reader1.readAsArrayBuffer(file);
@@ -206,124 +281,321 @@ class Studio extends Component {
     };
 
     saveSong = () => {
-        axios.post('https://shenkar-band-it.herokuapp.com/studio/saveDataInStudio',{
-            channels: this.state.channelData,
-            songId: this.state.songId,
-            title: this.state.title,
-            bpm: this.state.bpm
-        }).then((res)=>{
+        this.setState({loading:true});
+        const formData = new FormData();
+        this.state.newAudioFiles.forEach((audio) =>{
+            formData.append('newAudioFiles',audio);
+        });
+        const length = this.updateSongLength();
+        formData.append('channels',JSON.stringify(this.state.channelData));
+        formData.append('deletedChannels',JSON.stringify(this.state.deletedChannels));
+        formData.append('songId',this.state.songId);
+        formData.append('title',this.state.title);
+        formData.append('bpm',this.state.bpm);
+        formData.append('timeSignature',this.state.timeSignature);
+        formData.append('key',this.state.key);
+        formData.append('length',this.state.length);
+        axios.post('http://localhost:3003/studio/saveDataInStudio',formData).then((res)=>{
             window.alert(res);
+            this.setState({loading:false})
         })
-        // let files = [];
-        // this.state.channelData.forEach((channel)=>{
-        //     channel.audioFiles.forEach((audio) => {
-        //         if (audio.audioUrl === 'local') {
-        //             console.log(audio.file);
-        //             files.push(audio.file);
-        //         }
-        //     })
-        // });
-
-        // Push all the axios request promise into a single array
-        // const uploaders = files.map(file => {
-        //
-        // });
-
-        // Once all the files are uploaded
-        // axios.all(uploaders).then(() => {
-            //     // ... perform after upload is successful operation
-            //     var data = new FormData();
-            //     data.append('files', JSON.stringify(files));
-            //     data.append('channelData', this.state.channelData);
-            //     data.append('songId', this.state.songId);
-            //     data.append('title', this.state.title);
-            //     axios.post('http://localhost:1234/studio/saveDataInStudio',data,{
-            //         headers: {
-            //             'Content-Type': 'multipart/form-data'
-            //         }
-            //     })
-            //         .then((res) => {
-            //
-            //         })
-            // });
     };
 
-    editTitle = (data) => {
+    downloadLink = async () => {
+        this.setState({saving:true});
+        const length = this.updateSongLength();
+        await this.playAll(true);
+        var rec = new Recorder(this.state.mainGain);
+        rec.record();
+        setTimeout(async ()=>{
+            rec.stop();
+            await this.stopAll();
+            rec.exportWAV((blob) => {
+                const file = new File([blob], "export.wav");
+                this.uploadNewExport(file);
+            })
+        },length * 1000)
+    };
+
+    uploadNewExport(file) {
+        const formData = new FormData();
+        formData.append('export',file);
+        formData.append('songId',this.state.songId);
+        axios.post('http://localhost:3003/studio/exportSong',formData).then((res)=>{
+            this.setState({saving:false});
+        })
+    }
+
+    editTitle = (text) => {
         //TODO handle empty string
-        this.setState({title:data})
+        this.setState({title:text})
+    };
+
+    editChannelLabel = (text,ci) => {
+        let channelData = this.state.channelData;
+        channelData[ci].edited = true;
+        channelData[ci].title = text;
+        this.setState({channelData})
     };
 
     componentWillUnmount() {
         clearInterval(this.timer);
     }
+
+    addDistortionEffect(stream,effectValue) {
+        let audioCtx = this.state.context;
+        let value = effectValue/50;
+        let masterNode = audioCtx.createGain();
+        let distortionGainNode = audioCtx.createGain();
+        let distortionNode = audioCtx.createWaveShaper();
+        distortionNode.curve = makeDistortionCurve(200);
+        stream.connect(distortionNode);
+        distortionNode.connect(distortionGainNode);
+        distortionGainNode.gain.value = value;
+        let bypassNode = audioCtx.createGain();
+        stream.connect(bypassNode);
+        bypassNode.connect(masterNode);
+        bypassNode.gain.value = 1;
+        distortionGainNode.connect(masterNode);
+        return masterNode;
+
+        function makeDistortionCurve(amount) {
+            var k = amount,
+                n_samples = 44100,
+                curve = new Float32Array(n_samples),
+                deg = Math.PI / 180,
+                i = 0,
+                x;
+            for ( ; i < n_samples; ++i ) {
+                x = i * 2 / n_samples - 1;
+                curve[i] = (3 + k)*Math.atan(Math.sinh(x*0.25)*5) / (Math.PI + k * Math.abs(x));
+            }
+            return curve;
+        }
+    }
+
+    getImpulse() {
+        let impulseUrl = 'https://res.cloudinary.com/voiera/video/upload/v1560524168/BIG_HALL_E001_M2S_d0yywu.wav';
+        let ajaxRequest = new XMLHttpRequest();
+        let that = this;
+        ajaxRequest.open('GET', impulseUrl, true);
+        ajaxRequest.responseType = 'arraybuffer';
+
+        ajaxRequest.onload = function() {
+            var impulseData = ajaxRequest.response;
+            that.state.context.decodeAudioData(impulseData).then(function(buffer) {
+                that.setState({convolverBuffer:buffer});
+            });
+        };
+        ajaxRequest.send();
+    }
+
+    addReverbEffect(stream,effectValue) {
+        let value = effectValue/10;
+        let audioCtx = this.state.context;
+        let masterNode = audioCtx.createGain();
+        let bypassNode = audioCtx.createGain();
+        let convolverGainNode = audioCtx.createGain();
+        let convolver = audioCtx.createConvolver();
+        convolver.buffer = this.state.convolverBuffer;
+        stream.connect(convolver);
+        convolver.connect(convolverGainNode);
+        convolverGainNode.gain.value = value;
+        convolverGainNode.connect(masterNode);
+        stream.connect(bypassNode);
+        bypassNode.gain.value = 1;
+        bypassNode.connect(masterNode);
+        return masterNode;
+    }
+
+
+    addDelayEffect(stream,effectValue) {
+        let value = effectValue/100;
+        console.log(value);
+        let audioCtx = this.state.context;
+        //create an audio node from the stream
+        let streamNode = stream;
+        let delayNode = audioCtx.createDelay(100)
+        let feedbackNode = audioCtx.createGain();
+        let bypassNode = audioCtx.createGain();
+        let masterNode = audioCtx.createGain();
+
+        //controls
+        delayNode.delayTime.value = 1.04;
+        feedbackNode.gain.value = 0.5;
+        bypassNode.gain.value = value;
+
+        //wire up nodes
+        streamNode.connect(delayNode);
+        delayNode.connect(feedbackNode);
+        feedbackNode.connect(delayNode);
+
+        delayNode.connect(bypassNode);
+        bypassNode.connect(masterNode);
+        streamNode.connect(masterNode);
+
+        // masterNode.connect(audioCtx.destination);
+        return masterNode;
+    }
+
+    changeTab(channelIndex, value) {
+        let channelData = this.state.channelData;
+        channelData[channelIndex].tab = value;
+        this.setState({channelData})
+    }
+
+    editBPM(bpm) {
+        this.setState({bpm})
+    }
+    editTimeSignature(timeSignature) {
+        this.setState({timeSignature})
+    }
+    editKey(key) {
+        this.setState({key})
+    }
+
+    deleteChannel(ci) {
+        let channelData = this.state.channelData;
+        let deletedChannels = this.state.deletedChannels;
+        let currentDeletedChannel = channelData.splice(ci,1);
+        deletedChannels.push(currentDeletedChannel[0]);
+        this.setState({channelData,deletedChannels});
+    }
+
     render() {
         return (
             <div>
-                {this.state.loading ? <div className="loading">Loading...</div> : ''}
+                { this.state.loading || this.state.saving ? <div className="loading">
+                    <CircularProgress size={80} thickness={5} />
+                    {this.state.loading ? <p>Loading...</p> : <p>Exporting to MP3, This may take a while</p> }
+                </div> : ''}
                 <div className="header">
                     <div className="songDetails">
-                        <EditableLabel text={this.state.title}
-                                       labelClassName='songTitle'
-                                       inputClassName='songTitle'
-                                       inputWidth='300px'
-                                       onFocusOut={this.editTitle.bind(this)}
-                        />
+                        {!this.state.loading ?
+                            <EditableLabel text={this.state.title}
+                                           labelClassName='songTitle'
+                                           inputClassName='songTitle'
+                                           inputWidth='300px'
+                                           onFocusOut={this.editTitle.bind(this)}
+                            /> : ''
+                        }
                     </div>
                     <div className="controls">
-                        <Button className={"controlButton"}>
-                            <FontAwesomeIcon icon={faStepBackward}/>
-                        </Button>
-                        <Button className={"controlButton"}>
-                            <FontAwesomeIcon icon={faStepForward}/>
-                        </Button>
                         <Button className={"controlButton"} onClick={this.stopAll}>
                             <FontAwesomeIcon icon={faStop}/>
                         </Button>
                         <Button className={"controlButton"} onClick={this.pauseAll}>
                             <FontAwesomeIcon icon={faPause}/>
                         </Button>
-                        <Button className={"controlButton"} onClick={this.playAll}>
+                        <Button className={"controlButton"} onClick={()=>{this.playAll()}}>
                             <FontAwesomeIcon icon={faPlay}/>
-                        </Button>
-                        <Button className={"controlButton"}>
-                            <FontAwesomeIcon icon={faMicrophone}/>
                         </Button>
                         <Button className={"controlButton"}>
                             {this.msToTime(this.state.runningTime)}
                         </Button>
                         <Button className={"controlButton"}>
-                            <FontAwesomeIcon icon={faMusic}/>
+                            <EditableLabel text={this.state.bpm}
+                                           labelClassName='bpmTitle'
+                                           inputClassName='bpmTitle'
+                                           inputWidth='38px'
+                                           onFocusOut={(data)=>{this.editBPM(data)}}
+                            />BPM
                         </Button>
                         <Button className={"controlButton"}>
-                            {this.state.bpm} BPM
+                            <FontAwesomeIcon style={{'marginRight': '10px'}} icon={faMusic}/>
+                            {!this.state.loading ?
+                                <EditableLabel text={this.state.key}
+                                               labelClassName='bpmTitle'
+                                               inputClassName='bpmTitle'
+                                               inputWidth='38px'
+                                               onFocusOut={(data) => {
+                                                   this.editKey(data)
+                                               }}
+                                /> : ''
+                            }
                         </Button>
                         <Button className={"controlButton"}>
-                            Cmaj
+                            {!this.state.loading ?
+                                <EditableLabel text={this.state.timeSignature}
+                                               labelClassName='bpmTitle'
+                                               inputClassName='bpmTitle'
+                                               inputWidth='38px'
+                                               onFocusOut={(data) => {
+                                                   this.editTimeSignature(data)
+                                               }}
+                                /> : ''
+                            }
                         </Button>
                         <Button className={"controlButton"}>
-                            4/4
+                            <FontAwesomeIcon style={{"marginRight": '10px'}} icon={faSave} onClick={this.saveSong.bind(this)}/> Save
                         </Button>
                         <Button className={"controlButton"}>
-                            <FontAwesomeIcon icon={faSave} onClick={this.saveSong.bind(this)}/>
+                            <FontAwesomeIcon style={{"marginRight": '10px'}} icon={faFileExport} onClick={() => {this.downloadLink()}}/> Export
                         </Button>
+                        {this.state.lastExportedUrl ?
+                        <Button className={"controlButton"}>
+                            <a style={{color:'inherit', textDecoration:'none'}} href={this.state.lastExportedUrl} download>
+                            <FontAwesomeIcon style={{"marginRight": '10px'}} icon={faCloudDownloadAlt}/> Download
+                            </a>
+                        </Button>
+                        : ''}
                     </div>
                 </div>
                     <div className="channels">
                         {this.state.channelData.map((channel,key) =>
-                            <div key={channel._id} className="channel">
-                                <img src={InstrumentImgs[channel.instrument] || InstrumentImgs.audio}/>
-                                <div className="channel-details">
-                                    <p>{channel.title}
-                                        <input className="fileUpload" type='file' id={'upload-ch-'+key} onChange={this.onUpload} />
-                                    </p>
-                                    <FontAwesomeIcon icon={faVolumeMute}/>
-                                    <FontAwesomeIcon icon={faHeadphones}/>
-                                    <Slider classes={{root: "volume-slider",track: "volume-track"}}
-                                            value={this.state.volume}
-                                            aria-labelledby="label"
-                                            onChange={this.changeVolume}/>
-                                    <span>FX</span>
+                            <div style={{position:'relative'}}>
+                                <div class="deleteChannel" onClick={() => {this.deleteChannel(key)}}>
+                                    <FontAwesomeIcon icon={faWindowClose}/>
                                 </div>
+                                {(!channel.tab || channel.tab === 0) &&
+                                    <div key={channel._id} className="channel">
+                                        <img src={InstrumentImgs[channel.instrument] || InstrumentImgs.audio}/>
+                                        <div className="channel-details">
+                                            <p>
+                                                <EditableLabel text={channel.title}
+                                                               labelClassName='channelTitle'
+                                                               inputClassName='channelTitle'
+                                                               inputWidth='300px'
+                                                               onFocusOut={(text)=>{this.editChannelLabel(text,key)}}
+                                                />
+                                                <input className="fileUpload" type='file' id={'upload-ch-'+key} onChange={this.onUpload} />
+                                                </p>
+                                            <FontAwesomeIcon onClick={(e)=>{this.changeVolume(e,0,key)}} icon={faVolumeMute}/>
+                                            <FontAwesomeIcon icon={faHeadphones}/>
+                                            <Slider classes={{root: "volume-slider",track: "volume-track"}}
+                                                    value={channel.audioEffects.volume * 100}
+                                                    aria-labelledby="label"
+                                                    onChange={(e,volume)=>{this.changeVolume(e,volume,key)}}/>
+                                            <span onClick={(e,value) => {this.changeTab(key,1)}}>
+                                                <FontAwesomeIcon icon={faMagic}/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                }
+                                {(channel.tab === 1) &&
+                                <div key={channel._id} className="channel">
+                                    <img src={InstrumentImgs[channel.instrument] || InstrumentImgs.audio}/>
+                                    <div className="channel-details">
+                                        <div className="effect">
+                                            <p>Delay</p>
+                                            <Slider classes={{root: "volume-slider",track: "volume-track"}}
+                                                    value={channel.audioEffects.delay}
+                                                    onChange={(e,value)=>{this.editEffect('delay',value,key)}}/>
+                                            <p>Reverb</p>
+                                            <Slider classes={{root: "volume-slider",track: "volume-track"}}
+                                                    value={channel.audioEffects.reverb}
+                                                    onChange={(e,value)=>{this.editEffect('reverb',value,key)}}/>
+                                            <p>Distortion</p>
+                                            <Slider classes={{root: "volume-slider",track: "volume-track"}}
+                                                    value={channel.audioEffects.distortion}
+                                                    onChange={(e,value)=>{this.editEffect('distortion',value,key)}}/>
+                                            <p onClick={(e,value) => {this.changeTab(key,0)}}>
+                                                <FontAwesomeIcon icon={faStepBackward}/>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                }
                             </div>
                         )}
                         <div>

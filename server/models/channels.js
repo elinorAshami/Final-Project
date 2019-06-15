@@ -9,10 +9,12 @@ var ChannelsSchema = new Schema({
         location: Number,
         audioUrl: String
     })],
-    effects: [{
-        type: String,
-        value: Number,
-    }],
+    audioEffects: {
+        volume: Number,
+        distortion: Number,
+        delay: Number,
+        reverb: Number,
+    },
     cDate: {type: Date, default: Date.now()},
     lmDate: {type: Date, default: Date.now()},
 });
@@ -27,6 +29,9 @@ ChannelsSchema.statics.updateChannel = function (channel,cb) {
     return this.update({_id:channel._id},channel,cb);
 };
 
+ChannelsSchema.statics.deleteChannel = function (channel,cb) {
+    return this.remove({_id:channel._id},cb);
+};
 
 ChannelsSchema.statics.getChannelsBySongId = function (id,cb) {
     return this.find({songId:id},cb);

@@ -6,11 +6,13 @@ var SongsSchema = new Schema({
     title : {type: String, default: 'New Song'},
     cDate: {type: Date, default: Date.now()},
     lmDate: {type: Date, default: Date.now()},
-    bpm : {type: Number, default: 120},
-    length: {type: String, default: '3:00'},
+    bpm : {type: Number, default: 90},
+    length: {type: Number, default: 0},
     lastExportedUrl: String,
     isPublic: {type: Boolean, default: true},
-    playCounter: {type:Number, default: 0}
+    playCounter: {type:Number, default: 0},
+    timeSignature: {type:String, default: '4/4'},
+    key: {type:String, default: 'Am'},
 });
 
 SongsSchema.statics.addNewSong = function(id,cb) {
@@ -24,6 +26,23 @@ SongsSchema.statics.getSongById = function (id,cb) {
 
 SongsSchema.statics.getSongsByBandId = function (id,cb) {
     return this.find({bandId:id},cb);
+};
+
+SongsSchema.statics.updateSong = function (updateObj,cb) {
+    console.log(updateObj);
+    var update = {
+        title: updateObj.title,
+        lmDate: new Date(),
+        bpm: updateObj.bpm,
+        length: updateObj.length,
+        timeSignature: updateObj.timeSignature,
+        key: updateObj.key
+    };
+    return this.update({_id:updateObj.songId},update,cb);
+}
+
+SongsSchema.statics.updateSongExport = function (updateObj,cb) {
+    return this.update({_id: updateObj._id},{lastExportedUrl:updateObj.lastExportedUrl},cb)
 }
 
 // Export the model

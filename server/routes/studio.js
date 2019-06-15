@@ -1,13 +1,12 @@
 var express = require('express');
 var router = express.Router();
-// var multer  = require('multer');
-// var storage = multer.memoryStorage()
-// var upload = multer({ storage: storage })
+const multer = require('multer')
+const upload = multer({ storage: multer.memoryStorage() })
 var studio_controller = require('../controllers/studio');
+const {uploadChannels,uploadExport} = require('../controllers/cloudinary');
 
-
-router.post('/getDataForStudio', studio_controller.getDataForStudio);
-router.post('/saveDataInStudio',studio_controller.saveDataInStudio);
-
+router.post('/getDataForStudio',studio_controller.getDataForStudio);
+router.post('/saveDataInStudio',upload.array('newAudioFiles',100),uploadChannels,studio_controller.saveDataInStudio);
+router.post('/exportSong',upload.single('export'),uploadExport,studio_controller.saveExportedSong)
 
 module.exports = router;

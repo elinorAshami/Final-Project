@@ -18,6 +18,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { TestComponent } from './test/test.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
+import { EditBandComponent } from './edit-band/edit-band.component';
 
 
 
@@ -37,6 +38,7 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
     RegisterComponent,
     TestComponent,
     EditProfileComponent,
+    EditBandComponent,
 
   ],
   imports: [

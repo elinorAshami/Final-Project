@@ -4,9 +4,16 @@
     <div class="topBand">
       <img src={{bandData.icon}}>
       <section>
-        <h3>{{bandData.name}}<span class="glyphicon glyphicon-pencil"></span></h3>
+        <h3>{{bandData.name}}
+          <a (click)="goToEdit()">
+            <span class="glyphicon glyphicon-pencil"></span>
+          </a>
+        </h3><br>
+
+        <h5> <span class="glyphicon glyphicon-tag"></span> {{bandData.genre}} </h5>
         <p>{{bandData.description}}</p>
       </section>
+
       <nav class="members">
         <h3>MEMBERS</h3>
         <nav *ngFor="let member of bandData.members">

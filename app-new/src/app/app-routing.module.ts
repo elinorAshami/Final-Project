@@ -12,6 +12,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { LoginComponent} from "./login/login.component";
 import { RegisterComponent} from "./register/register.component";
 import { EditProfileComponent} from "./edit-profile/edit-profile.component";
+import {EditBandComponent} from "./edit-band/edit-band.component";
 
 const routes: Routes = [
   { path: '' , component: IndexComponent },
@@ -25,7 +26,9 @@ const routes: Routes = [
   { path: 'profile/:id' , component: ProfileComponent},
   { path: 'login' , component: LoginComponent},
   { path: 'register' , component: RegisterComponent},
-  { path: 'editProfile/:id' , component: EditProfileComponent}
+  { path: 'editProfile/:id' , component: EditProfileComponent},
+  { path: 'editBand/:id' , component: EditBandComponent}
+
 
 ];
 

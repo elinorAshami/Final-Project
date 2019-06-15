@@ -6,7 +6,8 @@ var bcrypt = require('bcrypt');
 var User = new Schema({
   firstName : String,
   lastName : String,
-  icon : String,
+  icon : Buffer,
+  iconType: String,
   email : String,
   pass : String,
   genre : [{type: String, enum: ["rock","punk","classic"]}],

@@ -1,0 +1,36 @@
+<body>
+<app-menu></app-menu>
+<div class="wrapper">
+  <div class="userDiv">
+    <h2> EDIT MY PROFILE </h2><br>
+
+        <form method="post" role="form" [formGroup]="userForm">
+          <div class="Details">
+              <ul class="container details">
+                <h3> {{firstName}} {{lastName}} </h3> <br><br>
+                <li><p><span class="glyphicon glyphicon-user"></span> <input  formControlName="firstName" value="{{firstName}}"> </p></li>
+                <li><p><span class="glyphicon glyphicon-user"></span> <input  formControlName="lastName" value="{{lastName}}"> </p></li>
+                <li><p><span class="glyphicon glyphicon-envelope one"></span> <input type="email" formControlName="email" value="{{email}}"> </p></li>
+                <li><p><span class="glyphicon glyphicon-tag"></span>
+                  <select formControlName="genre"  tabindex="1" class="form-control" placeholder="Genre" value="{{genre}}">
+                    <option> rock </option>
+                    <option> punk </option>
+                    <option> classic </option>
+                  </select></p>
+                </li>
+              </ul> <br><br>
+          </div>
+
+          <div class="photo">
+            <img [src]="imageUrl">
+            <input formControlName="icon" type="file" #Image accept="image/*" (change)="handleFileInput($event.target.files)">
+          </div> <br><br>
+
+          <button (click)="updateUser()" type="submit"> Submit </button>
+        </form>
+
+    <div class="clear"></div>
+  </div>
+
+</div>
+</body>

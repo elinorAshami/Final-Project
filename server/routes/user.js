@@ -1,10 +1,36 @@
 var express = require('express');
 var router = express.Router();
 var user_controller = require('../controllers/user');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
-router.post('/getUserData', user_controller.getUserData);
+passport.use(new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'pass',
+    }, user_controller.authenticateUser
+));
 
-//router.post('/register',user_controller.addUser );
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
 
+passport.deserializeUser(function(user, done) {
+    done(null, user);
+});
+
+function isAuthenticated(req,res,next) {
+    if (req.isAuthenticated()) next();
+    else return res.status(401).json({message: 'Invalid Request'});
+}
+
+router.get('/getUserData',isAuthenticated, user_controller.getUserData);
+router.post('/register', user_controller.addNewUser,passport.authenticate('local', { failureRedirect: '/login' }),
+    function(req, res) {
+        res.json(req.body.user);
+    });
+router.post('/login', passport.authenticate('local'),
+    function(req, res) {
+        res.json('OK');
+    });
 
 module.exports = router;

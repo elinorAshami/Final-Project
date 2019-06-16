@@ -1,12 +1,27 @@
 // app.js
 const path = require('path');
 var express = require('express');
+var session = require('express-session');
 var bodyParser = require('body-parser');
+var app = express();
+var cors = require("cors");
+const passport = require('passport');
+app.use(cors({credentials: true, origin: 'http://localhost:4200'}))
+
+// Express Session
+app.use(session({
+    secret: 'secret',
+    saveUninitialized: true,
+    resave: true,
+}));
+
+// Passport init
+app.use(passport.initialize());
+app.use(passport.session());
+
 var studio = require('./routes/studio'); // Imports routes for the products
 var band = require('./routes/band');
 var user = require('./routes/user');
-var app = express();
-var cors = require("cors");
 
 // Set up mongoose connection
 var mongoose = require('mongoose');
@@ -16,22 +31,11 @@ mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use('/studio', studio);
 app.use('/users',user);
 app.use('/bands',band);
-//
-// app.get('/songstudio',(req,res) => {
-//     app.use(express.static(path.join(__dirname, '../client/build')));
-//     res.sendfile(path.join(__dirname, '../client/build/index.html'))
-// });
-//
-// app.get('/',(req,res)=> {
-//     app.use(express.static(path.join(__dirname, '../app-new/dist/app-new/')));
-//     res.sendfile(path.join(__dirname, '../app-new/dist/app-new/index.html'))
-// });
 
 app.get('/songstudio',(req,res) => {
     app.use(express.static(path.join(__dirname, 'client-studio')));

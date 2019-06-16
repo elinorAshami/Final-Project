@@ -16,6 +16,7 @@ export class RegisterComponent implements OnInit {
     lastName: new FormControl(null, Validators.required),
     email: new FormControl(null,[Validators.email , Validators.required]),
     genre: new FormControl( null, Validators.required),
+    instrument: new FormControl( null, Validators.required),
     pass: new FormControl(null, Validators.required),
     cpass: new FormControl(null, Validators.required),
   });
@@ -32,7 +33,7 @@ export class RegisterComponent implements OnInit {
     }
     this.register_s.register(JSON.stringify(this.registerForm.value))
       .subscribe(
-        data=> { console.log(data); this._router.navigate(['/login']);},
+        data=> { console.log(data); this._router.navigate(['/index']);},
         error=> console.error(error)
       )
   }

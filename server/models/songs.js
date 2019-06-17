@@ -49,6 +49,10 @@ SongsSchema.statics.getSongsByIds = function (idsArray,cb) {
     return this.find({_id: {$in : idsArray}},cb)
 };
 
+SongsSchema.statics.getSongsByBandIds = function (idsArray,cb) {
+    return this.find({bandId: {$in : idsArray}},cb)
+};
+
 // Export the model
 var SongsModel = mongoose.model('songs', SongsSchema);
 module.exports.SongsModel = SongsModel;

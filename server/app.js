@@ -49,10 +49,10 @@ app.get('/',(req,res)=> {
     res.sendfile(path.join(__dirname, 'client-dash/index.html'))
 });
 
-// app.get('/bands/:id',(req,res)=> {
-//     app.use(express.static(path.join(__dirname, 'client-dash')));
-//     res.sendfile(path.join(__dirname, 'client-dash/index.html'))
-// });
+app.get('/bands/:id',(req,res)=> {
+    app.use(express.static(path.join(__dirname, 'client-dash')));
+    res.sendfile(path.join(__dirname, 'client-dash/index.html'))
+});
 
 app.listen(process.env.PORT || 3003, () => {
     console.log('Server is up and running on port numner 3003');

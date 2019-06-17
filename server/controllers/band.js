@@ -109,4 +109,23 @@ function getFavorites(req,res,next) {
     })
 }
 
-module.exports = {getBandData,createNewSong,createNewBand,getSongUrl,favoriteSong,getFavorites};
+function getAllSongs(req,res,next) {
+    if (!req.user || !req.user._id) return next('missingid');
+    BandsModel.getBandsByUserId(req.user._id,(err,bands) => {
+        const bandIdMap = bands.map(band => band._id);
+        SongsModel.getSongsByBandIds(bandIdMap,(err,songs) => {
+            songs.forEach((song,index) => {
+                bands.forEach((band) => {
+                    band = band.toObject();
+                  if (song.bandId.equals(band._id)) {
+                      songs[index] = songs[index].toObject();
+                      songs[index].band = band;
+                  }
+                })
+            });
+            res.json(songs);
+        })
+    })
+}
+
+module.exports = {getBandData,createNewSong,createNewBand,getSongUrl,favoriteSong,getFavorites,getAllSongs};

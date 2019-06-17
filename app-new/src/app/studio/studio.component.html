@@ -1,3 +1,19 @@
-<app-menu></app-menu>
-
-<h1>STUDIO IN PROGRESS...</h1>
+<div class="col-xs-12">
+  <h1>MY STUDIO</h1>
+  <h2>EXPORTED SONGS</h2>
+  <div *ngFor="let song of exportedSongs">
+    <a (click)="playFavorite(song._id)">
+      <p style="margin:15px 0px; font-size: 16px; background: #07072f38; padding: 10px;">
+        <img style="border-radius:50%; width:60px; margin-right:10px;" src={{song.band.icon}}>{{song.band.name}} - {{song.title}}
+      </p>
+    </a>
+  </div>
+  <h2>YET TO BE EXPORTED</h2>
+  <div *ngFor="let song of unexportedSongs">
+    <a (click)="playFavorite(song._id)">
+      <p style="margin:15px 0px; font-size: 16px; background: #07072f38; padding: 10px;">
+        <img style="border-radius:50%; width:60px; margin-right:10px;" src={{song.band.icon}}>{{song.band.name}} - {{song.title}}
+      </p>
+    </a>
+  </div>
+</div>

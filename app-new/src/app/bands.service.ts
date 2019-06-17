@@ -65,6 +65,14 @@ export class BandsService {
     });
   }
 
+  getAllSongs() {
+    return this.http.post('http://localhost:3003/bands/getAllSongs'  ,{},{
+      observe:'body',
+      withCredentials:true,
+      headers: new HttpHeaders().append('Content-Type' , 'application/json')
+    });
+  }
+
   /*getBands() {
     return this.http.get('http://localhost:3000/api/tasks')
       .pipe(

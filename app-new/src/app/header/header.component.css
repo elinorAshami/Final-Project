@@ -1,0 +1,19 @@
+#wrapper {
+  background:#DCDCDC;
+}
+input{
+  border:none;
+  border-radius: 40px;
+  width:340px;
+  height:20px;
+  padding: 5%;
+
+}
+
+.search-box{
+  background-color:white;
+  border-radius: 40px;
+  width:400px;
+  margin-left:1.5%;
+  margin-bottom: 2%;
+}

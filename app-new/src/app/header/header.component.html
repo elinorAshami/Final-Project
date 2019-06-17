@@ -1,0 +1,19 @@
+<!--<div class="logout">-->
+  <!--<button  (click)="logout()"> Log Out </button>-->
+<!--</div>-->
+<!--<h3>{{firstName}} {{lastName}} </h3>-->
+
+
+<div class="col-xs-4 search-box">
+  <input type="text" name="" placeholder="Search Library"> <span class="glyphicon glyphicon-search"></span>
+</div>
+<div *ngIf="!isLoggedIn" style="float:right; text-align:right" class="col-xs-3">
+  <a routerLink="/login"  id="login-form-link">
+  <span style="font-size: 14px; margin-right:15px;">Login</span> <img style="width:45px; border-radius:100%" src="../../assets/anonymous-user.png">
+  </a>
+</div>
+<div *ngIf="isLoggedIn" style="float:right; text-align:right" class="col-xs-3">
+  <a routerLink="/profile/{{_id}}"  id="login-form-link">
+    <span style="font-size: 14px; margin-right:15px;">Hi {{firstName}} {{lastName}} ! </span> <img style="width:45px; border-radius:100%" src="{{icon}}">
+  </a>
+</div>

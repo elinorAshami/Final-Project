@@ -12,9 +12,55 @@ export class BandsService {
   }
 
   updateBand(body:any) {
-    console.log('hi from service');
     return this.http.post('http://localhost:3000/band/updateBand'  ,body, {
       observe:'body',
+      headers: new HttpHeaders().append('Content-Type' , 'application/json')
+    });
+  }
+
+  getSongUrl(body:any) {
+    return this.http.post('http://localhost:3003/bands/getSongUrl'  ,body, {
+      observe:'body',
+      headers: new HttpHeaders().append('Content-Type' , 'application/json')
+    });
+  }
+
+  favoriteSong(body:any) {
+    return this.http.post('http://localhost:3003/bands/favoriteSong'  ,body, {
+      observe:'body',
+      withCredentials:true,
+      headers: new HttpHeaders().append('Content-Type' , 'application/json')
+    });
+  }
+
+  getFavorites() {
+    return this.http.get('http://localhost:3003/bands/getFavorites'  , {
+      observe:'body',
+      withCredentials:true,
+      headers: new HttpHeaders().append('Content-Type' , 'application/json')
+    });
+  }
+
+  createNewBand(body:any) {
+    return this.http.post('http://localhost:3003/bands/createNewBand'  , body,{
+      observe:'body',
+      withCredentials:true,
+      headers: new HttpHeaders().append('Content-Type' , 'application/json')
+    });
+  }
+
+  createNewSong(body:any) {
+    return this.http.post('http://localhost:3003/bands/createNewSong'  , body,{
+      observe:'body',
+      withCredentials:true,
+      headers: new HttpHeaders().append('Content-Type' , 'application/json')
+    });
+  }
+
+  getBandData(body:any) {
+    return this.http.post('http://localhost:3003/bands/getBandData'  , body,{
+      observe:'body',
+      withCredentials:true,
       headers: new HttpHeaders().append('Content-Type' , 'application/json')
     });
   }

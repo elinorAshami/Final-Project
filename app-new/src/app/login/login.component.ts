@@ -20,10 +20,11 @@ export class LoginComponent implements OnInit {
       console.log('Invalid Form');
       return;
     }
-    //console.log(JSON.stringify(this.loginForm.value));
     this.login_s.login(JSON.stringify(this.loginForm.value))
       .subscribe(
-        data=>{ console.log(data); this._router.navigate(['/index']); },
+        data=>{
+          this.login_s.updateUserSuccessObj(data);
+          this._router.navigate(['/index']);},
         error=> console.error(error)
       )
   }

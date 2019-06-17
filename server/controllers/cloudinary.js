@@ -9,6 +9,17 @@ cloudinary.config({
     api_secret: 'jRR8oUUVnV8G-xemkPTujWvra6A'
 });
 
+function uploadBase64Cloudinary(req,res,next) {
+    if (req.body.file) {
+        cloudinary.uploader.upload(req.body.file.value).then((data) => {
+            req.body.icon = data.secure_url;
+            next();
+        })
+    } else {
+        next();
+    }
+}
+
 function uploadChannels(req, res, next) {
     console.log(req.body.channels);
     req.body.channels = JSON.parse(req.body.channels);
@@ -51,5 +62,6 @@ function uploadExport(req,res,next) {
 
 module.exports = {
     uploadChannels,
-    uploadExport
+    uploadExport,
+    uploadBase64Cloudinary
 };

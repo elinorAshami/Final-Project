@@ -1,39 +1,73 @@
-<body>
-<app-menu></app-menu>
-  <main>
-    <div class="topBand">
-      <img src={{bandData.icon}}>
-      <section>
-        <h3>{{bandData.name}}
-          <a (click)="goToEdit()">
-            <span class="glyphicon glyphicon-pencil"></span>
-          </a>
-        </h3><br>
-
-        <h5> <span class="glyphicon glyphicon-tag"></span> {{bandData.genre}} </h5>
-        <p>{{bandData.description}}</p>
-      </section>
-
-      <nav class="members">
-        <h3>MEMBERS</h3>
-        <nav *ngFor="let member of bandData.members">
-          <img src={{member.icon}}> <P>{{member.firstName}} {{member.lastName}}</P>
-        </nav>
-      </nav>
-      <nav class="songs">
-        <h3>SONGS</h3>
-        <nav *ngFor="let song of bandData.songs">
-          <a href="{{'/songstudio/?id='+song._id}}">
-            <img src={{bandData.icon}}>
-            <p>{{song.title}}</p>
-          </a>
-        </nav>
-        <nav>
-            <p (click)="createNewSong()">Create New Song</p>
-        </nav>
-      </nav>
-        <div class="clear"></div>
+<div class="col-xs-12">
+<div class="col-xs-5" style="padding: 0 20px;">
+  <img style="width:100%; height: 300px" src="{{bandData.icon}}">
+</div>
+<div class="col-xs-7" style="padding: 0 20px;">
+  <h1>{{bandData.name}} <a routerLink="{{'/editBand/'+bandData._id}}"><span style="font-size:14px;" class="glyphicon glyphicon-pencil"></span></a></h1>
+  <p><span style="margin:10px 0px; font-size:14px;" class="glyphicon glyphicon-tag"></span>Rock</p>
+  <p style="font-size:16px;">{{bandData.description}}</p>
+</div>
+</div>
+<div class="col-xs-12" style="margin-top:30px;">
+  <div class="col-xs-5" style="padding: 0 20px;">
+    <h2 style="margin-bottom:20px;">MEMBERS</h2>
+    <div *ngFor="let member of bandData.members">
+      <p style="margin:15px 0px; font-size: 16px;"><img style="border-radius:50%; width:60px; margin-right:10px;" src={{member.icon}}>{{member.firstName}} {{member.lastName}}</p>
     </div>
-  </main>
-</body>
+  </div>
+  <div class="col-xs-7" style="padding: 0 20px;">
+    <h2>SONGS</h2>
+    <div *ngFor="let song of bandData.songs">
+      <p style="margin:15px 0px; font-size: 16px; background: #07072f38; padding: 10px;">
+        <img style="border-radius:50%; width:60px; margin-right:10px;" src={{bandData.icon}}>{{song.title}}
+        <a href="{{'/songstudio/?id='+song._id}}">
+          <span style="margin-left:10px" class="glyphicon glyphicon-edit"></span>
+        </a>
+      </p>
+    </div>
+    <div>
 
+      <p style="margin:15px 0px; font-size: 16px; background: #07072f38; padding: 10px;">
+        <a (click)="createNewSong()">
+          <span style="margin-left:10px" class="glyphicon glyphicon-plus"></span>
+          Create New Song
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+ <!--<main>-->
+    <!--<div class="topBand">-->
+      <!--<img src={{bandData.icon}}>-->
+      <!--<section>-->
+        <!--<h3>{{bandData.name}}-->
+          <!--<a (click)="goToEdit()">-->
+            <!--<span class="glyphicon glyphicon-pencil"></span>-->
+          <!--</a>-->
+        <!--</h3><br>-->
+
+        <!--<h5> <span class="glyphicon glyphicon-tag"></span> {{bandData.genre}} </h5>-->
+        <!--<p>{{bandData.description}}</p>-->
+      <!--</section>-->
+
+      <!--<nav class="members">-->
+        <!--<h3>MEMBERS</h3>-->
+        <!--<nav *ngFor="let member of bandData.members">-->
+          <!--<img src={{member.icon}}> <P>{{member.firstName}} {{member.lastName}}</P>-->
+        <!--</nav>-->
+      <!--</nav>-->
+      <!--<nav class="songs">-->
+        <!--<h3>SONGS</h3>-->
+        <!--<nav *ngFor="let song of bandData.songs">-->
+          <!--<a href="{{'/songstudio/?id='+song._id}}">-->
+            <!--<img src={{bandData.icon}}>-->
+            <!--<p>{{song.title}}</p>-->
+          <!--</a>-->
+        <!--</nav>-->
+        <!--<nav>-->
+            <!--<p (click)="createNewSong()">Create New Song</p>-->
+        <!--</nav>-->
+      <!--</nav>-->
+        <!--<div class="clear"></div>-->
+    <!--</div>-->
+  <!--</main>-->

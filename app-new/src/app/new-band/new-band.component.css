@@ -2,19 +2,22 @@
   display: block;
 }
 form{
-  width: 65%;
-  float: right;
-  margin-top: 10%;
+  width: 100%;
 }
 textarea{
-  width: 25%;
+  width: 50%;
 }
 input{
-  width: 25%;
+  font-size:14px;
+  width: 50%;
 }
 select{
-  width: 25%;
+  width: 50%;
+}
+
+label {
+  font-size: 14px;
 }
 .custom-file-label{
-  width: 36%;
+  width: 50%;
 }

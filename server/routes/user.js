@@ -3,7 +3,7 @@ var router = express.Router();
 var user_controller = require('../controllers/user');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-
+const cloudinary = require('../controllers/cloudinary')
 passport.use(new LocalStrategy({
         usernameField: 'email',
         passwordField: 'pass',
@@ -24,13 +24,10 @@ function isAuthenticated(req,res,next) {
 }
 
 router.get('/getUserData',isAuthenticated, user_controller.getUserData);
-router.post('/register', user_controller.addNewUser,passport.authenticate('local', { failureRedirect: '/login' }),
+router.post('/register', cloudinary.uploadBase64Cloudinary, user_controller.addNewUser,passport.authenticate('local', { failureRedirect: '/login' }),
     function(req, res) {
         res.json(req.body.user);
     });
-router.post('/login', passport.authenticate('local'),
-    function(req, res) {
-        res.json('OK');
-    });
+router.post('/login', passport.authenticate('local'),user_controller.getUserData);
 
 module.exports = router;

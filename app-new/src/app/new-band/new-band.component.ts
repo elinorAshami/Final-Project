@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs/internal/Observable";
+import {BandsService} from "../bands.service";
 import {NgForm} from "@angular/forms";
 
 @Component({
@@ -10,24 +11,50 @@ import {NgForm} from "@angular/forms";
 })
 export class NewBandComponent implements OnInit {
 
-  constructor(private http: HttpClient) {
+  file: any;
+  name: String;
+  description: String;
+  members: String;
+  genre: String;
+
+  constructor(private http: HttpClient, private bandsService: BandsService) {
   }
 
   ngOnInit() {
   }
 
-  public onSubmit(f: NgForm) {
+  public onSubmit() {
       const objReq = {
-          creator : '5cd6c54ca53c5805d94023e1',
-          name : f.value.name,
-          description: f.value.description,
-          icon : f.value.icon,
-          genre : f.value.genre
+          name : this.name,
+          description: this.description,
+          members: this.members,
+          genre : this.genre,
+          file : this.file,
       };
-      const req = this.http.post<any>("https://shenkar-band-it.herokuapp.com/bands/createNewBand",objReq);
-      req.subscribe((data)=>{
-          window.location.href = 'https://shenkar-band-it.herokuapp.com/bands/'+data._id
+      this.bandsService.createNewBand(objReq).subscribe((data) => {
+
+      },(err) => {
+
       })
+      // const req = this.http.post<any>("https://shenkar-band-it.herokuapp.com/bands/createNewBand",objReq);
+      // req.subscribe((data)=>{
+      //     window.location.href = 'https://shenkar-band-it.herokuapp.com/bands/'+data._id
+      // })
+  }
+
+  onFileChange(event) {
+    let reader = new FileReader();
+    if(event.target.files && event.target.files.length > 0) {
+      let file = event.target.files[0];
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.file = {
+          filename: file.name,
+          filetype: file.type,
+          value: reader.result
+        };
+      };
+    }
   }
 
 }

@@ -17,8 +17,10 @@ function getUserData (req,res,next) {
 function addNewUser(req,res,next) {
     UsersModel.addNewUser(req.body,(err,user) => {
         if (err) throw new Error(err);
-        req.body.user = user;
-        next();
+        BandsModel.registerPendingMember(user,(err,res) => {
+            req.body.user = user;
+            next();
+        });
     })
 }
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
 import {ActivatedRoute, Router} from "@angular/router";
+import {BandsService} from "../bands.service";
 
 @Component({
   selector: 'app-band',
@@ -10,33 +11,38 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class BandComponent implements OnInit {
 
-  bandData : Observable<any>;
-  id : string;
+  bandData : Object = {};
+  bandId : string;
 
-  constructor( private http: HttpClient, private route: ActivatedRoute, private router: Router ) {
+  constructor( private http: HttpClient, private route: ActivatedRoute, private router: Router ,private bandsService: BandsService) {
     this.route.params.subscribe(params => {
-      this.id = params['id'];
+      this.bandId = params['id'];
     });
-    const req = this.http.post<any>("https://shenkar-band-it.herokuapp.com/bands/getBandData",{id: this.id});
-    req.subscribe((data)=>{
+    this.bandsService.getBandData({id: this.bandId}).subscribe((data) => {
       this.bandData = data;
-      console.log( 'band data:' + JSON.stringify(this.bandData) );
+    },(err) => {
+      console.error(err);
     });
   }
 
-  public createNewSong() {
-      const req = this.http.post<any>("https://shenkar-band-it.herokuapp.com/bands/createNewSong",{id: this.id});
-      req.subscribe((data)=>{
-        window.location.href = 'https://shenkar-band-it.herokuapp.com/songstudio/?id='+data._id
-      })
+  createNewSong() {
+      this.bandsService.createNewSong({id: this.bandId}).subscribe((data) => {
+        this.redirectToStudio(data);
+      },(err) => {
+        console.error(err);
+      });
+  }
+
+  redirectToStudio(data) {
+    window.location.href = 'https://shenkar-band-it.herokuapp.com/songstudio/?id='+ data._id
   }
 
   ngOnInit() {
   }
 
-  goToEdit(){
-    console.log( 'the id is : ' + this.id)
-    this.router.navigate(['/editBand' , this.id]  );
-  }
+  // goToEdit(){
+  //   console.log( 'the id is : ' + this.id)
+  //   this.router.navigate(['/editBand' , this.id]  );
+  // }
 
 }

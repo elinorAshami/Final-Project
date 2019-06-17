@@ -22,6 +22,7 @@ app.use(passport.session());
 var studio = require('./routes/studio'); // Imports routes for the products
 var band = require('./routes/band');
 var user = require('./routes/user');
+var index = require('./routes/index');
 
 // Set up mongoose connection
 var mongoose = require('mongoose');
@@ -36,22 +37,23 @@ app.use(bodyParser.json());
 app.use('/studio', studio);
 app.use('/users',user);
 app.use('/bands',band);
+app.use('/index',index);
 
 app.get('/songstudio',(req,res) => {
-    app.use(express.static(path.join(__dirname, 'client-studio')));
-    res.sendfile(path.join(__dirname, 'client-studio/index.html'))
+    app.use(express.static(path.join(__dirname, '../client/build')));
+    res.sendfile(path.join(__dirname, '../client/build/index.html'))
 });
 
 app.get('/',(req,res)=> {
-    app.use(express.static(path.join(__dirname, 'client-dash')));
-    res.sendfile(path.join(__dirname, 'client-dash/index.html'))
+    app.use(express.static(path.join(__dirname, '../app-new/dist/app-new')));
+    res.sendfile(path.join(__dirname, '../app-new/dist/app-new/index.html'))
 });
 
-app.get('/bands/:id',(req,res)=> {
-    app.use(express.static(path.join(__dirname, 'client-dash')));
-    res.sendfile(path.join(__dirname, 'client-dash/index.html'))
-});
+// app.get('/bands/:id',(req,res)=> {
+//     app.use(express.static(path.join(__dirname, 'client-dash')));
+//     res.sendfile(path.join(__dirname, 'client-dash/index.html'))
+// });
 
 app.listen(process.env.PORT || 3003, () => {
-    console.log('Server is up and running on port numner 3000');
+    console.log('Server is up and running on port numner 3003');
 });

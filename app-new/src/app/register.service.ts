@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {ActivatedRoute} from "@angular/router";
+import { Observable, Subject } from 'rxjs';
 
 
 @Injectable({
@@ -8,9 +9,23 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class RegisterService {
 
-
+  private subject = new Subject<any>();
+  userData: any;
   constructor( private http: HttpClient ) {
 
+  }
+
+  updateUserSuccessObj(user: any) {
+    this.userData = user;
+    this.subject.next(user);
+  }
+
+  getUserObj(): Observable<any> {
+    return this.subject.asObservable();
+  }
+
+  getUser() {
+    return this.userData;
   }
 
   register(body:any){

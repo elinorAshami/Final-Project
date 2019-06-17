@@ -20,27 +20,93 @@ function getBandData (req,res,next) {
 }
 
 function createNewBand(req,res,next) {
-    if (!req.body.creator) return next('missingid');
-    const objReq = {
-        managerId : req.body.creator,
-        members: [req.body.creator],
-        name :req.body.name,
-        description: req.body.description,
-        icon : req.body.icon,
-        genre : req.body.genre
-    };
-    BandsModel.addNewBand(objReq,(err,band)=> {
-        if (err) return next(err);
-        res.json({_id: band._id});
-    })
+    if (!req.user || !req.user._id) return next('missingid');
+    if (req.body.members) {
+        const emailArr = req.body.members.split(',');
+        UsersModel.getUsersByEmails(emailArr,(err,regUsers) => {
+            regUsers.forEach((regUser) => {
+                emailArr.splice(emailArr.indexOf(regUser.email),1);
+            });
+            const objReq = {
+                managerId : req.user._id,
+                members: [req.user._id].concat(regUsers.map(user => user._id)),
+                pendingMembers: emailArr,
+                name :req.body.name,
+                description: req.body.description,
+                icon : req.body.icon,
+                genre : req.body.genre
+            };
+            BandsModel.addNewBand(objReq,(err,band)=> {
+                if (err) return next(err);
+                res.json({_id: band._id});
+            })
+        });
+    } else {
+        const objReq = {
+            managerId : req.user._id,
+            members: [req.user._id],
+            pendingMembers: [],
+            name :req.body.name,
+            description: req.body.description,
+            icon : req.body.icon,
+            genre : req.body.genre
+        };
+        BandsModel.addNewBand(objReq,(err,band)=> {
+            if (err) return next(err);
+            res.json({_id: band._id});
+        })
+    }
 }
 
 function createNewSong (req,res,next) {
-    if (!req.body.id) return next('missingid');
+    if (!req.user || !req.user._id) return next('missingid');
     SongsModel.addNewSong(req.body.id,(err,song)=> {
         if (err) return next(err);
         res.json({_id: song._id});
     })
 }
 
-module.exports = {getBandData,createNewSong,createNewBand};
+function getSongUrl (req,res,next) {
+    SongsModel.getSongById(req.body.songId,(err,song) => {
+        song = song.toObject();
+        if (err) return next(err);
+        BandsModel.getBandById(song.bandId,(err,band) => {
+            band = band.toObject();
+            song = Object.assign(song,{bandName: band.name, bandIcon: band.icon})
+            res.json(song);
+        });
+    });
+}
+
+function favoriteSong(req,res,next) {
+    if (!req.user || !req.user._id) return next('missingid');
+    UsersModel.addToFavorites({_id: req.user._id,songId:req.body.songId},(err,favorite) => {
+        if (err) next(err);
+        console.log()
+        res.json(favorite);
+    })
+}
+
+function getFavorites(req,res,next) {
+    if (!req.user || !req.user._id) return next('missingid');
+    UsersModel.getUserById(req.user._id,(err,user) => {
+        user = user.toObject();
+        SongsModel.getSongsByIds(user.favorites,(err,songs) => {
+            const bandIdMap = songs.map(song => song.bandId);
+            BandsModel.getBandsByIds(bandIdMap,(err,bands) => {
+                songs.forEach((song,index) => {
+                    bands.forEach((band) => {
+                        band = band.toObject();
+                        if (band._id.equals(song.bandId)) {
+                            songs[index] = songs[index].toObject();
+                            songs[index].band = band;
+                        }
+                    })
+                });
+                res.json(songs);
+            });
+        })
+    })
+}
+
+module.exports = {getBandData,createNewSong,createNewBand,getSongUrl,favoriteSong,getFavorites};

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {RegisterService} from "../register.service";
-import {Router} from "@angular/router";
-
+import {IndexService} from "../index.service";
+import {PlayerService} from "../player.service";
 
 
 @Component({
@@ -12,30 +11,36 @@ import {Router} from "@angular/router";
 
 export class IndexComponent implements OnInit {
 
-  firstName:String='';
-  lastName:String='';
+  topSongs: any;
+  topBands: any;
+  featuredMain: Object = {};
+  featured: any;
 
-  constructor(private _user:RegisterService, private _router:Router) {
-    this._user.user()
-      .subscribe(
-        data=>this.addName(data),
-      error=>this._router.navigate(['/login'])
-      )
+  constructor(private _index:IndexService, private playerService: PlayerService) {
+    this._index.getIndexData().subscribe(
+      data => {
+        this.updateData(data);
+      }, err => {
+        console.error(err);
+      }
+    )
   }
-  addName(data){
-    this.firstName = data.firstName;
-    this.lastName = data.lastName;
+
+  playSong(songId,songUrl) {
+    const audioObj = {
+      songId,songUrl
+    };
+    this.playerService.sendToPlayer(audioObj);
+  }
+
+  updateData(data) {
+    this.topSongs = data.topSongs;
+    this.topBands = data.topBands;
+    this.featuredMain = data.featuredMain;
+    this.featured = data.featured;
   }
 
   ngOnInit() {
-  }
-
-  logout(){
-    this._user.logout()
-      .subscribe(
-        data=>{ console.log(data); this._router.navigate(['/login'])},
-        error=>console.error(error)
-      )
   }
 
 }

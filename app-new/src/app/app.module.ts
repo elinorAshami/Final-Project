@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
-
+// import { NgxAudioPlayerModule } from 'ngx-audio-player';
 import { AppComponent } from './app.component';
 import { IndexComponent } from './index/index.component';
 import { BandComponent } from './band/band.component';
@@ -19,6 +19,8 @@ import { RegisterComponent } from './register/register.component';
 import { TestComponent } from './test/test.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { EditBandComponent } from './edit-band/edit-band.component';
+import { HeaderComponent } from './header/header.component';
+import { SoundPlayerComponent } from './sound-player/sound-player.component';
 
 
 
@@ -39,6 +41,8 @@ import { EditBandComponent } from './edit-band/edit-band.component';
     TestComponent,
     EditProfileComponent,
     EditBandComponent,
+    HeaderComponent,
+    SoundPlayerComponent,
 
   ],
   imports: [

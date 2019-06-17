@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var ObjectId = mongoose.ObjectId;
 
 var UsersSchema = new Schema({
     firstName : String,
@@ -12,6 +13,7 @@ var UsersSchema = new Schema({
     lmDate : {type: Date, default: Date.now()},
     isLooking : {type: Boolean, default: false},
     instrument : {type: String, enum : ["Guitar","Vocal","Bass","Drums"]},
+    favorites: [ObjectId]
 });
 
 UsersSchema.statics.addNewUser = function (user,cb) {
@@ -39,6 +41,23 @@ UsersSchema.statics.getUserByUsername = function (email,cb) {
 UsersSchema.statics.getUsersByIds = function(idArr,cb) {
     return this.find({_id: {$in : idArr}},cb)
 }
+UsersSchema.statics.addToFavorites = function(params,cb) {
+    var query = {
+        _id: params._id
+    };
+    var update = {
+        $addToSet: {favorites: params.songId}
+    };
+    return this.update(query,update,cb)
+}
+
+UsersSchema.statics.getUsersByEmails = function(emailArr,cb) {
+    var query = {
+        email : {$in: emailArr}
+    };
+    return this.find(query,cb);
+};
+
 
 var UsersModel = mongoose.model('users', UsersSchema);
 module.exports.UsersModel = UsersModel;

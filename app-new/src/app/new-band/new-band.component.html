@@ -1,23 +1,20 @@
-<app-menu></app-menu>
-<main>
-      <form (submit)="createBand($event)">
-          <label> Band name: </label> <input type="text" [(ngModel)]="bandName" name="bandName"><br>
+<div class="col-xs-12">
+      <h1>Add New Band</h1>
+      <form (ngSubmit)="onSubmit()">
+          <label> Band name: </label> <input type="text" [(ngModel)]="name" name="bandName"><br>
           <label> Genre: </label>
-            <select [(ngModel)]="janner" name="janner">
-              <option> Genre1 </option>
-              <option> Genre2 </option>
-              <option> Genre3 </option>
-              <option> Genre4 </option>
+            <select [(ngModel)]="genre" name="genre">
+              <option> Rock </option>
+              <option> Punk </option>
+              <option> Jazz </option>
             </select><br>
           <label> Description: </label>
-          <textarea ngModel name="description"></textarea><br>
-          <!--<label> Icon URL: </label> <input type="text" ngModel name="icon"><br>-->
-          <!--<label> Add members: </label> <input type="text"><br>-->
+          <textarea [(ngModel)]="description" name="description"></textarea><br>
+        <label> Members Emails (seperated by comma): </label> <input type="text" [(ngModel)]="members" name="members"><br>
           <div class="custom-file mb-3">
-            <input type="file" ngModel name="icon" class="custom-file-input">
+            <input  (change)="onFileChange($event)" type="file" ngModel name="icon" class="custom-file-input">
             <label for="file" class="custom-file-label"> Add band photo </label><br>
-          </div>
+          </div><br>
           <input type="submit" value="Submit" class="btn btn-primary">
       </form>
-</main>
-
+</div>

@@ -43,7 +43,11 @@ SongsSchema.statics.updateSong = function (updateObj,cb) {
 
 SongsSchema.statics.updateSongExport = function (updateObj,cb) {
     return this.update({_id: updateObj._id},{lastExportedUrl:updateObj.lastExportedUrl},cb)
-}
+};
+
+SongsSchema.statics.getSongsByIds = function (idsArray,cb) {
+    return this.find({_id: {$in : idsArray}},cb)
+};
 
 // Export the model
 var SongsModel = mongoose.model('songs', SongsSchema);

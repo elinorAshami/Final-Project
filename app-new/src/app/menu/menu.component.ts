@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
+import {RegisterService} from "../register.service";
+import {Subscription} from "rxjs/index";
 
 @Component({
   selector: 'app-menu',
@@ -10,14 +12,22 @@ import {HttpClient} from "@angular/common/http";
 
 export class MenuComponent implements OnInit {
 
-  bands : Observable<any>;
-  constructor(private http: HttpClient) {
-    const req = this.http.post<any>("https://shenkar-band-it.herokuapp.com/users/getUserData",{id:"5cd6c54ca53c5805d94023e1"});
-    req.subscribe((data)=>{
-      this.bands = data.bands;
+  bands : any = [];
+  subscription: Subscription;
+  constructor(private registerService: RegisterService, private http: HttpClient) {
+    this.registerService.user().subscribe(data => {
+      this.updateBands(data);
     });
+
+    this.subscription = this.registerService.getUserObj().subscribe(data =>{
+      console.log('menuComp',data);
+      this.updateBands(data);
+    })
   }
 
+  updateBands(data) {
+    this.bands = data.bands;
+  }
   ngOnInit() {
   }
 

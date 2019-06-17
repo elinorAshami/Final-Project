@@ -11,6 +11,8 @@ import {Router} from "@angular/router";
 })
 export class RegisterComponent implements OnInit {
 
+  file: any;
+
   registerForm:FormGroup = new FormGroup({
     firstName: new FormControl(null, Validators.required),
     lastName: new FormControl(null, Validators.required),
@@ -19,6 +21,7 @@ export class RegisterComponent implements OnInit {
     instrument: new FormControl( null, Validators.required),
     pass: new FormControl(null, Validators.required),
     cpass: new FormControl(null, Validators.required),
+    file: new FormControl(null, Validators.required),
   });
 
   constructor(private _router:Router, private register_s:RegisterService) {}
@@ -31,11 +34,27 @@ export class RegisterComponent implements OnInit {
       console.log('Invalid Form');
       return;
     }
+    this.registerForm.value.file = this.file;
     this.register_s.register(JSON.stringify(this.registerForm.value))
       .subscribe(
         data=> { console.log(data); this._router.navigate(['/index']);},
         error=> console.error(error)
       )
+  }
+
+  onFileChange(event) {
+    let reader = new FileReader();
+    if(event.target.files && event.target.files.length > 0) {
+      let file = event.target.files[0];
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.file = {
+          filename: file.name,
+          filetype: file.type,
+          value: reader.result
+        };
+      };
+    }
   }
 }
 
